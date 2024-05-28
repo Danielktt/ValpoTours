@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="celeste">#98DAD9</color>
+    <color name="celeste_letra">#50C2C9</color>
+    <color name="negro">#000000</color>
+    <color name="naranjo">#C67C4E</color>
+    <color name="amarillo">#FBBE21</color>
+    <color name="rojo">#FF0000</color>
+    <color name="verde">#36C07E</color>
+    <color name="blanco2">#F5F5F5</color>
+    <color name="blanco">#FFFFFF</color>
+    <color name="pelota_esquina">#6AE0D9</color>
 </resources>

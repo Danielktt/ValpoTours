@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">ValpoTours</string>
+
+    <string name="welcome">Bienvenido</string>
 </resources>
