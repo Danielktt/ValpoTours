@@ -49,7 +49,8 @@
         android:layout_height="51dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvWelcome">
+        app:layout_constraintTop_toBottomOf="@+id/tvWelcome"
+        app:cardCornerRadius="24dp">
 
 
     </androidx.cardview.widget.CardView>
