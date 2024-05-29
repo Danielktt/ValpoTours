@@ -2,4 +2,9 @@
     <string name="app_name">ValpoTours</string>
 
     <string name="welcome">Bienvenido</string>
+    <string name="full_name">Escribe tu nombre completo</string>
+    <string name="email">Correo electrónico</string>
+    <string name="password">Contraseña</string>
+    <string name="confirm_password">Confirmar contraseña</string>
+    <string name="register">Registrarse</string>
 </resources>
