@@ -22,6 +22,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
+    <ImageButton
+        android:id="@+id/btnBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_back"
+        android:backgroundTint="@android:color/transparent"
+        android:paddingTop="60dp"
+        android:paddingStart="30dp"
+        />
+
 
     <TextView
         android:id="@+id/tvWelcome"
@@ -142,6 +152,27 @@
         android:text="@string/register"
         android:textSize="23dp">
     </Button>
+    <TextView
+        android:id="@+id/tvSignIn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/already_have_an_account"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tvSignInLink"
+        app:layout_constraintTop_toBottomOf="@id/BtnRegistrar"
+        android:layout_marginTop="4dp" />
+
+    <TextView
+        android:id="@+id/tvSignInLink"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sign_in"
+        android:textColor="@color/celeste_letra"
+        app:layout_constraintTop_toBottomOf="@+id/BtnRegistrar"
+        app:layout_constraintStart_toEndOf="@+id/tvSignIn"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:linksClickable="true"
+        />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,4 +7,6 @@
     <string name="password">Contraseña</string>
     <string name="confirm_password">Confirmar contraseña</string>
     <string name="register">Registrarse</string>
+    <string name="already_have_an_account">¿ya tienes una cuenta?</string>
+    <string name="sign_in">iniciar sesión</string>
 </resources>
