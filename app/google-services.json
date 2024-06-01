@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "143109148475",
+    "project_id": "valpotours-3e71f",
+    "storage_bucket": "valpotours-3e71f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:143109148475:android:e8e7ccac6bd90c8137311e",
+        "android_client_info": {
+          "package_name": "com.example.valpotours"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAb0AygwCKrLZ6QHtw_4zdH141YGrIdMlM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
