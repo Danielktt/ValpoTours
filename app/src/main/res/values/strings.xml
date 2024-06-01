@@ -11,11 +11,11 @@
     <string name="already_have_an_account">¿ya tienes una cuenta?</string>
     <string name="sign_in">iniciar sesión</string>
     <!-- Login-->
-    <string name="forgot_password">Forgot password</string>
-    <string name="login">Login</string>
-    <string name="next">Continue without registering</string>
+    <string name="forgot_password">Olvido su contraseña</string>
+    <string name="login">Ingresar</string>
+    <string name="next_without_account">Continuar Sin registrar</string>
     <string name="title_activity_login">LoginActivity</string>
-    <string name="singup">Don"'"t have an account ? Sing Up</string>
+    <string name="singup">¿No tiene una cuenta?, Registrarse</string>
     <!-- Configuración -->
     <string name="settings">Configuración</string>
     <string name="log_out">Cerrar sesión</string>

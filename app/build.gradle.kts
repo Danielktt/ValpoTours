@@ -38,6 +38,7 @@ android {
 
 dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
+    implementation ("com.firebase:geofire-android-common:3.2.0")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
