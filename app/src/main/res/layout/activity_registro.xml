@@ -27,9 +27,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@android:color/transparent"
+        android:contentDescription="@string/full_name"
         android:paddingStart="30dp"
         android:paddingTop="60dp"
-        android:src="@drawable/ic_back" />
+        android:src="@drawable/ic_back"
+        tools:ignore="MissingConstraints" />
 
 
     <TextView
@@ -144,6 +146,7 @@
         android:backgroundTint="@color/celeste_letra"
         android:text="@string/register"
         android:textSize="23dp"
+        android:onClick="registerUser"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cvConfirmPassword"></Button>
