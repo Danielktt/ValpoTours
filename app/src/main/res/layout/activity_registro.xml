@@ -137,7 +137,7 @@
     </androidx.cardview.widget.CardView>
 
     <Button
-        android:id="@+id/BtnRegistrar"
+        android:id="@+id/btnRegistrar"
         android:layout_width="325dp"
         android:layout_height="62dp"
         android:layout_marginTop="48dp"
