@@ -16,7 +16,6 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 class RegistroActivity : AppCompatActivity() {
-
     private lateinit var etFullName: EditText
     private lateinit var etEmail: EditText
     private lateinit var etPassword: EditText
