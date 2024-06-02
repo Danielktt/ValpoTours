@@ -51,6 +51,7 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
+
     fun login() {
         loginUser()
     }
@@ -75,6 +76,5 @@ class LoginActivity : AppCompatActivity() {
     private fun goRegister(){
         val intent = Intent(this, RegistroActivity::class.java)
         startActivity(intent)
-
     }
 }

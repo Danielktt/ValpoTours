@@ -22,17 +22,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
-        android:id="@+id/btnBack"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@android:color/transparent"
-        android:contentDescription="@string/full_name"
-        android:paddingStart="30dp"
-        android:paddingTop="60dp"
-        android:src="@drawable/ic_back"
-        tools:ignore="MissingConstraints" />
-
 
     <TextView
             android:id="@+id/tvWelcome"
@@ -159,7 +148,7 @@
         android:text="@string/already_have_an_account"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/BtnRegistrar"
+        app:layout_constraintTop_toBottomOf="@id/btnRegistrar"
         android:layout_marginRight="64dp"/>
 
     <TextView
@@ -172,7 +161,7 @@
         android:textColor="@color/celeste_letra"
         android:layout_marginLeft="4dp"
         app:layout_constraintStart_toEndOf="@+id/tvSignIn"
-        app:layout_constraintTop_toBottomOf="@+id/BtnRegistrar"
+        app:layout_constraintTop_toBottomOf="@+id/btnRegistrar"
         />
 
 
