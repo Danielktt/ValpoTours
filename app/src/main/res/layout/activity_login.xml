@@ -89,6 +89,7 @@
         android:paddingTop="10dp"
         android:text="@string/forgot_password"
         android:textColor="@color/celeste_letra"
+        android:onClick="forgotPassword"
         app:layout_constraintTop_toBottomOf="@id/etPassword"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -99,13 +100,15 @@
         android:id="@+id/tvContinue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:minHeight="48dp"
+        android:onClick="nextWithout"
         android:paddingTop="10dp"
         android:text="@string/next_without_account"
         android:textColor="@color/celeste_letra"
-        app:layout_constraintTop_toBottomOf="@id/tvForgotPassword"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvForgotPassword" />
 
     <!-- Botón de Login -->
 
@@ -119,22 +122,45 @@
         android:text="@string/login"
         android:textColor="@color/blanco"
         android:textSize="23dp"
+        android:onClick="login"
         app:layout_constraintTop_toBottomOf="@id/tvContinue"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="@id/btnIngresar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/tvRegister"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:paddingTop="10dp"
         android:text="@string/singup"
         android:textColor="@color/celeste_letra"
-        app:layout_constraintTop_toBottomOf="@id/btnIngresar"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp" />
+        app:layout_constraintHorizontal_bias="0.317"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnIngresar" />
+
+    <TextView
+        android:id="@+id/tvRegister2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="104dp"
+        android:paddingTop="10dp"
+        android:text="@string/register"
+        android:textColor="@color/rojo"
+        android:onClick="goRegister"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnIngresar" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

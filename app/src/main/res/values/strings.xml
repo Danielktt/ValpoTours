@@ -15,7 +15,7 @@
     <string name="login">Ingresar</string>
     <string name="next_without_account">Continuar Sin registrar</string>
     <string name="title_activity_login">LoginActivity</string>
-    <string name="singup">¿No tiene una cuenta?, Registrarse</string>
+    <string name="singup">¿No tiene una cuenta?,</string>
     <!-- Configuración -->
     <string name="settings">Configuración</string>
     <string name="log_out">Cerrar sesión</string>
