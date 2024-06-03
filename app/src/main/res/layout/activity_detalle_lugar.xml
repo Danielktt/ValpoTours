@@ -38,6 +38,11 @@
         android:backgroundTint="@android:color/transparent"
         />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvImagePlaces"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
 
 
 

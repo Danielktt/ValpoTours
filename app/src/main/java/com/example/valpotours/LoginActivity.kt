@@ -88,7 +88,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun goHome(email:String) {
-        val intent = Intent(this, SettingsActivity::class.java)
+        val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
     }
     private fun goRegister(){
