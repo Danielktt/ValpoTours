@@ -3,6 +3,7 @@ package com.example.valpotours
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.view.Menu
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -26,7 +27,6 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var etPassword: EditText
 
     private lateinit var mAuth: FirebaseAuth
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +55,7 @@ class LoginActivity : AppCompatActivity() {
             resetPassword()
         }
     }
+
 
     fun resetPassword(){
         var e = etEmail.text.toString()

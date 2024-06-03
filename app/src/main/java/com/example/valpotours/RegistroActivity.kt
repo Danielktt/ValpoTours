@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
@@ -103,11 +104,6 @@ class RegistroActivity : AppCompatActivity() {
                                     )
                                     )
                                     binding.progressBar.isVisible = true
-                                    user.sendEmailVerification()
-                                    while (user?.isEmailVerified == false){
-
-                                    }
-
                                     goHome(email)
                                 } else {
                                     Toast.makeText(
