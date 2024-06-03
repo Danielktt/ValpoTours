@@ -2,6 +2,7 @@ package com.example.valpotours
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.TextUtils
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -49,9 +50,23 @@ class LoginActivity : AppCompatActivity() {
             goRegister()
         }
 
+        val textForgotPass = findViewById<TextView>(R.id.tvForgotPassword)
+        textForgotPass.setOnClickListener{
+            resetPassword()
+        }
     }
 
-
+    fun resetPassword(){
+        var e = etEmail.text.toString()
+        if (!TextUtils.isEmpty(e)){
+            mAuth.sendPasswordResetEmail(e)
+                .addOnCompleteListener{task ->
+                    if (task.isSuccessful)  Toast.makeText(this, "mail enviado.", Toast.LENGTH_SHORT).show()
+                    else
+                        Toast.makeText(this, "Correo invalido", Toast.LENGTH_SHORT).show()
+                }
+        }
+    }
     fun login() {
         loginUser()
     }
