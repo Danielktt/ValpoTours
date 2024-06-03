@@ -21,4 +21,8 @@
     <string name="log_out">Cerrar sesión</string>
     <string name="language">Idioma</string>
     <string name="version">Versión</string>
+    <string name="title_activity_main2">MainActivity2</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
 </resources>
