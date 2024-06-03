@@ -65,6 +65,8 @@ class LoginActivity : AppCompatActivity() {
                     else
                         Toast.makeText(this, "Correo invalido", Toast.LENGTH_SHORT).show()
                 }
+        }else{
+            Toast.makeText(this, "Ingrese correo", Toast.LENGTH_SHORT).show()
         }
     }
     fun login() {

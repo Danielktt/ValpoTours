@@ -1,7 +1,11 @@
 package com.example.valpotours
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -9,7 +13,10 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
+import com.example.valpotours.databinding.ActivityRegistroBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.ktx.firestore
@@ -24,6 +31,8 @@ class RegistroActivity : AppCompatActivity() {
 
     private lateinit var mAuth: FirebaseAuth
 
+    private lateinit var binding: ActivityRegistroBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -34,11 +43,13 @@ class RegistroActivity : AppCompatActivity() {
             insets
         }
 
+        binding = ActivityRegistroBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         initComponents()
-        initListensers()
+        initListeners()
     }
 
-    private fun initListensers() {
+    private fun initListeners() {
         btnRegister.setOnClickListener {
             registerUser()
         }
@@ -60,6 +71,7 @@ class RegistroActivity : AppCompatActivity() {
         val email = etEmail.text.toString()
         val password = etPassword.text.toString()
         val password2 = etPassword2.text.toString()
+
 
         if (fullName.isEmpty() || email.isEmpty() || password.isEmpty() || password2.isEmpty()) {
             Toast.makeText(this, "Por favor, completa todos los campos.", Toast.LENGTH_SHORT).show()
@@ -90,7 +102,12 @@ class RegistroActivity : AppCompatActivity() {
                                         "constraseña" to password
                                     )
                                     )
+                                    binding.progressBar.isVisible = true
                                     user.sendEmailVerification()
+                                    while (user?.isEmailVerified == false){
+
+                                    }
+
                                     goHome(email)
                                 } else {
                                     Toast.makeText(

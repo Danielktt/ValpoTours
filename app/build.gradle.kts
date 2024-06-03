@@ -37,12 +37,19 @@ android {
     buildFeatures {
         viewBinding = true
     }
+
+    viewBinding{
+        enable=true
+    }
 }
 
 dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
     implementation ("com.firebase:geofire-android-common:3.2.0")
     implementation ("com.google.firebase:firebase-auth")
+    implementation("androidx.core:core-ktx:1.10.1")
+    // Also add the dependency for the Google Play services library and specify its version
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
