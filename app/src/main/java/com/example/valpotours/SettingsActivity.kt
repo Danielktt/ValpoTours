@@ -26,13 +26,13 @@ class SettingsActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        fun btnlogout(view: View){
-            singOff()
-        }
+
 
     }
-    private fun singOff(){
+    fun btnlogout(view: View){
         FirebaseAuth.getInstance().signOut()
-        startActivity(Intent(this,LoginActivity::class.java))
+        val intent = Intent(this, LoginActivity::class.java)
+        startActivity(intent)
+
     }
 }

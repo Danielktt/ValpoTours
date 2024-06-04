@@ -85,18 +85,25 @@
     </androidx.cardview.widget.CardView>
 
     <Button
-        android:id="@+id/BtnRegistrar"
+        android:id="@+id/BtnLogout"
         android:layout_width="325dp"
         android:layout_height="62dp"
-        android:layout_marginTop="48dp"
-        android:layout_marginBottom="46dp"
+        android:layout_marginBottom="128dp"
         android:backgroundTint="@color/celeste_letra"
-        android:text="@string/log_out"
         android:onClick="btnlogout"
+        android:text="@string/log_out"
         android:textSize="23dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/navMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:menu="@menu/main_menu"
+        />
 
 
 
