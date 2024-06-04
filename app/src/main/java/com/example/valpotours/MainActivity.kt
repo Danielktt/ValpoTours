@@ -2,19 +2,12 @@ package com.example.valpotours
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
-
-    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,35 +19,35 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
-        navController = navHostFragment.navController
-
         val bottomNav = findViewById<BottomNavigationView>(R.id.navMenu)
-        bottomNav.setupWithNavController(navController)
-
         bottomNav.setOnNavigationItemSelectedListener { item ->
-            when(item.itemId) {
+            when (item.itemId) {
                 R.id.settingsFragment -> {
                     callSettingsActivity()
                     true
-
                 }
-                R.id.homeFragment ->{
+                R.id.homeFragment -> {
                     callHomeActivity()
                     true
                 }
-                else  -> false
+                else -> false
             }
         }
     }
 
     private fun callHomeActivity() {
         val intent = Intent(this, MainActivity::class.java)
+        // Opcionalmente, puedes agregar flags para evitar que se creen múltiples instancias de la actividad
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
+        finish() // Finaliza la actividad actual para evitar regresar a ella
     }
 
     private fun callSettingsActivity() {
         val intent = Intent(this, SettingsActivity::class.java)
+        // Opcionalmente, puedes agregar flags para evitar que se creen múltiples instancias de la actividad
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
+        finish() // Finaliza la actividad actual para evitar regresar a ella
     }
 }
