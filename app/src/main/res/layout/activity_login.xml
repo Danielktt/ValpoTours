@@ -7,7 +7,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/blanco2"
-    tools:context=".LoginActivity">
+    tools:context=".LoginActivity"
+    tools:ignore="ExtraText">
 
     <!-- Primer ImageView -->
     <ImageView
@@ -86,14 +87,15 @@
         android:id="@+id/tvForgotPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:minHeight="48dp"
+        android:onClick="forgotPassword"
         android:paddingTop="10dp"
         android:text="@string/forgot_password"
         android:textColor="@color/celeste_letra"
-        android:onClick="forgotPassword"
-        app:layout_constraintTop_toBottomOf="@id/etPassword"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/etPassword" />
 
     <!-- TextView para Siguiente -->
     <TextView
@@ -148,19 +150,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btnIngresar" />
 
+
     <TextView
         android:id="@+id/tvRegister2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="104dp"
+        android:minHeight="48dp"
+        android:onClick="goRegister"
         android:paddingTop="10dp"
         android:text="@string/register"
         android:textColor="@color/celeste_letra"
-        android:onClick="goRegister"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btnIngresar" />
-
+        app:layout_constraintStart_toEndOf="@+id/tvRegister"
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
