@@ -101,7 +101,6 @@
         android:background="@color/celeste_letra"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="60dp"
         />
 
 </LinearLayout>

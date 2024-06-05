@@ -47,30 +47,31 @@ class LoginActivity : AppCompatActivity() {
             login()
         }
         val textRegistrarse = findViewById<TextView>(R.id.tvRegister2)
-        textRegistrarse.setOnClickListener{
+        textRegistrarse.setOnClickListener {
             goRegister()
         }
 
         val textForgotPass = findViewById<TextView>(R.id.tvForgotPassword)
-        textForgotPass.setOnClickListener{
+        textForgotPass.setOnClickListener {
             resetPassword()
         }
     }
 
-
-    fun resetPassword(){
-        var e = etEmail.text.toString()
-        if (!TextUtils.isEmpty(e)){
+    fun resetPassword() {
+        val e = etEmail.text.toString()
+        if (!TextUtils.isEmpty(e)) {
             mAuth.sendPasswordResetEmail(e)
-                .addOnCompleteListener{task ->
-                    if (task.isSuccessful)  Toast.makeText(this, "mail enviado.", Toast.LENGTH_SHORT).show()
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful)
+                        Toast.makeText(this, "Correo de restablecimiento enviado.", Toast.LENGTH_SHORT).show()
                     else
-                        Toast.makeText(this, "Correo invalido", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Correo inválido.", Toast.LENGTH_SHORT).show()
                 }
-        }else{
-            Toast.makeText(this, "Ingrese correo", Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(this, "Ingrese correo.", Toast.LENGTH_SHORT).show()
         }
     }
+
     fun login() {
         loginUser()
     }
@@ -81,18 +82,22 @@ class LoginActivity : AppCompatActivity() {
 
         mAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) goHome(email)
-                else {
+                if (task.isSuccessful) {
+                    userMail = email
+                    goHome()
+                } else {
                     Toast.makeText(this, "Error al iniciar sesión. Por favor, verifica tus credenciales.", Toast.LENGTH_SHORT).show()
                 }
             }
     }
 
-    private fun goHome(email:String) {
+    private fun goHome() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
+        finish() // Opcional: Finaliza LoginActivity para que no se pueda volver a ella con el botón atrás
     }
-    private fun goRegister(){
+
+    private fun goRegister() {
         val intent = Intent(this, RegistroActivity::class.java)
         startActivity(intent)
     }
