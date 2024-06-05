@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".RegistroActivity"
-    android:id="@+id/main"
+    android:id="@+id/mainSettings"
     >
 
     <ImageView
@@ -102,7 +102,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:menu="@menu/main_menu"
+        app:menu="@menu/bottom_nav_menu"
         />
 
 

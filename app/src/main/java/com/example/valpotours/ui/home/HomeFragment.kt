@@ -1,4 +1,4 @@
-package com.example.valpotours.fragment
+package com.example.valpotours.ui.home
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

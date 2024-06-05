@@ -19,14 +19,14 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        val bottomNav = findViewById<BottomNavigationView>(R.id.navMenu)
+            val bottomNav = findViewById<BottomNavigationView>(R.id.nav_view)
         bottomNav.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.settingsFragment -> {
                     callSettingsActivity()
                     true
                 }
-                R.id.homeFragment -> {
+                R.id.favoriteFragment -> {
                     callHomeActivity()
                     true
                 }
@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun callSettingsActivity() {
-        val intent = Intent(this, SettingsActivity::class.java)
+        val intent = Intent(this, DetalleLugar::class.java)
         // Opcionalmente, puedes agregar flags para evitar que se creen múltiples instancias de la actividad
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)

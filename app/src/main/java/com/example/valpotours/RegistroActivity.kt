@@ -16,6 +16,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import com.example.valpotours.databinding.ActivityRegistroBinding
+import com.example.valpotours.ui.home.HomeFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.UserProfileChangeRequest
@@ -125,7 +126,7 @@ class RegistroActivity : AppCompatActivity() {
     }
 
     private fun goHome(email: String) {
-        val intent = Intent(this, SettingsActivity::class.java)
+        val intent = Intent(this, HomeFragment::class.java)
         startActivity(intent)
         finish()
     }

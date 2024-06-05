@@ -2,22 +2,22 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_nav"
-    app:startDestination="@id/homeFragment">
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
 
     <fragment
-        android:id="@+id/homeFragment"
-        android:name="com.example.valpotours.fragment.HomeFragment"
+        android:id="@+id/navigation_home"
+        android:name="com.example.valpotours.ui.home.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" />
     <fragment
         android:id="@+id/favoriteFragment"
-        android:name="com.example.valpotours.fragment.FavoriteFragment"
+        android:name="com.example.valpotours.ui.favorite.FavoriteFragment"
         android:label="fragment_favorite"
         tools:layout="@layout/fragment_favorite" />
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.example.valpotours.fragment.SettingsFragment"
+        android:name="com.example.valpotours.ui.setting.SettingsFragment"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings" />
 </navigation>
