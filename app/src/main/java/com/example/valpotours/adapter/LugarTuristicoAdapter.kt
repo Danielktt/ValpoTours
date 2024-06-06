@@ -7,7 +7,7 @@ import com.example.valpotours.LugaresTuristico
 import com.example.valpotours.R
 
 
-class LugarTuristicoAdapter(private val lugarturisticoList:List<LugaresTuristico>) : RecyclerView.Adapter<LugarTuristicoViewHolder>(){
+class LugarTuristicoAdapter(private val lugarturisticoList:ArrayList<LugaresTuristico>) : RecyclerView.Adapter<LugarTuristicoViewHolder>(){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LugarTuristicoViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)

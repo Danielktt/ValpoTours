@@ -6,31 +6,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.valpotours.Categorias
-import com.example.valpotours.LugarTuristicoProvider
-import com.example.valpotours.R
 import com.example.valpotours.adapter.CategoriasAdapter
 import com.example.valpotours.adapter.LugarTuristicoAdapter
-import com.example.valpotours.databinding.ActivityMainBinding
 import com.example.valpotours.databinding.FragmentFavoriteBinding
-import com.example.valpotours.databinding.FragmentHomeBinding
-import com.example.valpotours.ui.home.HomeViewModel
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.QuerySnapshot
-import com.google.firebase.firestore.toObject
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -72,7 +58,6 @@ class FavoriteFragment : Fragment() {
         binding.rvCategories.adapter = CategoriasAdapter(categoriasArrayList)
         EventChangeListener()
         binding.rvLugares.layoutManager = GridLayoutManager(requireContext(), 2)
-        binding.rvLugares.adapter = LugarTuristicoAdapter(LugarTuristicoProvider.lugaresTuristicoList)
         return binding.root
     }
 
