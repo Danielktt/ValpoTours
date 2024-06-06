@@ -17,8 +17,8 @@ class LugarTuristicoAdapter(private val lugarturisticoList:ArrayList<LugaresTuri
     override fun getItemCount(): Int = lugarturisticoList.size
 
     override fun onBindViewHolder(holder: LugarTuristicoViewHolder, position: Int) {
-        val item = lugarturisticoList[position]
-        holder.render(item)
+        holder.render(lugarturisticoList[position])
+
     }
 
 }

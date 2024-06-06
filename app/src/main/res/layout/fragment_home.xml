@@ -60,7 +60,7 @@
     <!-- RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycleLugares"
-        android:background="@color/celeste_letra"
+        android:background="@color/blanco2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         />

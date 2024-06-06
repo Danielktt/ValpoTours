@@ -22,7 +22,7 @@ class LugarTuristicoViewHolder(view: View): RecyclerView.ViewHolder(view){
     fun render(lugarModel : LugaresTuristico){
         lugarTuristico.text = lugarModel.nombre
         valoracion.text = lugarModel.id
-        Glide.with(binding.ivLugar.context).load(lugarModel.foto).into(binding.ivLugar)
+        Glide.with(binding.ivLugar.context).load(lugarModel.urlimg).into(binding.ivLugar)
         binding.ivLugar.setOnClickListener{
             val context = it.context
             val intent = Intent(context,DetalleLugar::class.java)
