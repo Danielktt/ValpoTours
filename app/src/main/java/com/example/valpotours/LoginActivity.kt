@@ -6,12 +6,14 @@ import android.text.TextUtils
 import android.view.Menu
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.isVisible
 import com.example.valpotours.ui.home.HomeFragment
 import com.google.firebase.auth.FirebaseAuth
 import kotlin.properties.Delegates
@@ -27,6 +29,8 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var etEmail: EditText
     private lateinit var etPassword: EditText
 
+    private lateinit var progressBar: ProgressBar
+
     private lateinit var mAuth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,13 +45,16 @@ class LoginActivity : AppCompatActivity() {
         etEmail = findViewById(R.id.etEmail)
         etPassword = findViewById(R.id.etPassword)
         mAuth = FirebaseAuth.getInstance()
+        progressBar = findViewById(R.id.progressBar)
         val btnIngresar = findViewById<Button>(R.id.btnIngresar)
         btnIngresar.setOnClickListener {
             // Llamamos a la función login cuando se hace clic en el botón de iniciar sesión
+            progressBar.isVisible = true
             login()
         }
         val textRegistrarse = findViewById<TextView>(R.id.tvRegister2)
         textRegistrarse.setOnClickListener {
+            progressBar.isVisible = true
             goRegister()
         }
 
@@ -86,6 +93,7 @@ class LoginActivity : AppCompatActivity() {
                     userMail = email
                     goHome()
                 } else {
+                    progressBar.isVisible = false
                     Toast.makeText(this, "Error al iniciar sesión. Por favor, verifica tus credenciales.", Toast.LENGTH_SHORT).show()
                 }
             }

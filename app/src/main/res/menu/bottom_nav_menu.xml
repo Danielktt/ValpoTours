@@ -1,20 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
     <item
         android:id="@+id/navigation_home"
-        android:title="Home"
         android:icon="@drawable/ic_navbar_home_unselected"
+        app:showAsAction="ifRoom"
         />
 
     <item
         android:id="@+id/favoriteFragment"
-        android:title="Favoritos"
         android:icon="@drawable/ic_navbar_favorite_unselected"
+        app:showAsAction="ifRoom"
         />
 
     <item
         android:id="@+id/settingsFragment"
-        android:title="settings"
         android:icon="@drawable/ic_navbar_settings_selected"
+        app:showAsAction="ifRoom"
         />
 </menu>

@@ -54,6 +54,9 @@
         app:layout_constraintVertical_bias="0.311"
         app:srcCompat="@drawable/logo" />
 
+
+
+
     <!-- EditText para Email -->
     <EditText
         android:id="@+id/etEmail"
@@ -69,20 +72,22 @@
         android:inputType="textEmailAddress"/>
 
     <!-- EditText para Contraseña -->
+
+    <!-- TextView para Olvidé mi Contraseña -->
     <EditText
         android:id="@+id/etPassword"
         android:layout_width="325dp"
         android:layout_height="51dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/style_etbg"
         android:gravity="center"
         android:hint="@string/password"
-        app:layout_constraintTop_toBottomOf="@id/etEmail"
-        app:layout_constraintStart_toStartOf="parent"
+        android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp"
-        android:inputType="textPassword"/>
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/etEmail" />
 
-    <!-- TextView para Olvidé mi Contraseña -->
     <TextView
         android:id="@+id/tvForgotPassword"
         android:layout_width="wrap_content"
@@ -156,15 +161,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="104dp"
         android:minHeight="48dp"
         android:onClick="goRegister"
         android:paddingTop="10dp"
         android:text="@string/register"
         android:textColor="@color/celeste_letra"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tvRegister"
         app:layout_constraintTop_toBottomOf="@id/btnIngresar" />
-        app:layout_constraintStart_toEndOf="@+id/tvRegister"
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

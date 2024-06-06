@@ -1,14 +1,164 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.favorite.FavoriteFragment">
+    tools:context=".ui.favorite.FavoriteFragment"
+    android:orientation="vertical">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_bghome"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_marginTop="60dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="204dp"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/tvUserName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:layout_weight="1"
+                    tools:text="Pablo Villalobos"
+                    android:textSize="26sp"
+                    android:textColor="@color/blanco"/>
 
-</FrameLayout>
+                <TextView
+                    android:id="@+id/tvEditName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/edit"
+                    android:textColor="@color/blanco"
+                    android:layout_gravity="center"
+                    />
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/ivUserPhoto"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_weight="1"
+                tools:src="@drawable/photo_perfil_prueva"
+                />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="4dp">
+                <TextView
+                    android:id="@+id/tvUseEmail"
+                    android:layout_width="204dp"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:layout_weight="1"
+                    tools:text="jane.doe@gmail.com"
+                    android:layout_gravity="center"
+                    android:textSize="13sp"
+                    android:textColor="@color/blanco"/>
+
+                <TextView
+                    android:id="@+id/tvEditEmail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/edit"
+                    android:textColor="@color/blanco"
+                    android:layout_gravity="center"
+                    />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="4dp">
+                <TextView
+                    android:id="@+id/tvUserPassword"
+                    android:layout_width="204dp"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:layout_weight="1"
+                    android:text="@string/edit_password"
+                    android:layout_gravity="center"
+                    android:textSize="13sp"
+                    android:textColor="@color/blanco"/>
+
+                <TextView
+                    android:id="@+id/tvEditPassword"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/edit"
+                    android:textColor="@color/blanco"
+                    android:layout_gravity="center"
+                    />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="4dp">
+                <TextView
+                    android:layout_width="204dp"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="20dp"
+                    android:layout_weight="1"
+                    android:text="@string/edit_photo"
+                    android:layout_gravity="center"
+                    android:textSize="13sp"
+                    android:textColor="@color/blanco"/>
+
+                <TextView
+                    android:id="@+id/tvEditPhoto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/edit"
+                    android:textColor="@color/blanco"
+                    android:layout_gravity="center"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/celeste_letra"
+        android:text="@string/see_tours"
+        android:textColor="@color/blanco"
+        android:layout_gravity="center"
+        />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvCategories"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvLugares"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>
