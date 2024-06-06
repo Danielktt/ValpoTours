@@ -25,6 +25,12 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.firestore.DocumentChange
+import com.google.firebase.firestore.EventListener
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.toObject
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -41,7 +47,7 @@ class FavoriteFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
-    lateinit var dbref : DatabaseReference
+    lateinit var db : FirebaseFirestore
     lateinit var binding: FragmentFavoriteBinding
     lateinit var categoriasArrayList: ArrayList<Categorias>
 
@@ -54,28 +60,6 @@ class FavoriteFragment : Fragment() {
 
     }
 
-    private fun getCategoriesData() {
-        dbref = FirebaseDatabase.getInstance().getReference("categorias")
-        Log.i("PedroEsparrago","${dbref.database.reference.parent}")
-        dbref.addValueEventListener(object : ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                if (snapshot.exists()){
-                    for(categoriaSnapshot in snapshot.children){
-                        val categoria = categoriaSnapshot.getValue(Categorias::class.java)
-                        categoriasArrayList.add(categoria!!)
-                    }
-                    binding.rvCategories.adapter = CategoriasAdapter(categoriasArrayList)
-
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                Log.i("PedroEsparrago","Error")
-            }
-
-        })
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -84,31 +68,35 @@ class FavoriteFragment : Fragment() {
 
         binding.rvCategories.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.rvCategories.setHasFixedSize(true)
-        categoriasArrayList = arrayListOf<Categorias>()
-        getCategoriesData()
+        categoriasArrayList = arrayListOf()
+        binding.rvCategories.adapter = CategoriasAdapter(categoriasArrayList)
+        EventChangeListener()
         binding.rvLugares.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.rvLugares.adapter = LugarTuristicoAdapter(LugarTuristicoProvider.lugaresTuristicoList)
         return binding.root
     }
 
+    private fun EventChangeListener() {
+        db = FirebaseFirestore.getInstance()
+        db.collection("categorias")
+            .addSnapshotListener(object : EventListener<QuerySnapshot>{
+                override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment FavoriteFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            FavoriteFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+                    if(error != null){
+                        Log.i("Firestore Error", error.message.toString())
+                        return
+                    }
+
+                    for(dc : DocumentChange in value?.documentChanges!!){
+                        if (dc.type == DocumentChange.Type.ADDED){
+                            categoriasArrayList.add(dc.document.toObject(Categorias::class.java))
+                        }
+                    }
+
+                    binding.rvCategories.adapter?.notifyDataSetChanged()
+
                 }
-            }
+            })
     }
+
 }
