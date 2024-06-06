@@ -52,49 +52,10 @@
     </LinearLayout>
 
     <!-- ScrollView para las categorías -->
-    <ScrollView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvCategories"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#FFFFFF"> <!-- Fondo blanco puro -->
-
-        <!-- LinearLayout para las categorías, orientación horizontal -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="20dp"
-            android:paddingVertical="20dp"
-            android:orientation="horizontal">
-
-            <!-- Categorías -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:text="Categoría 1"
-                android:textColor="#000000" /> <!-- Texto negro -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:padding="10dp"
-                android:layout_height="wrap_content"
-                android:text="Categoría 2"
-                android:textColor="#000000" /> <!-- Texto negro -->
-            <TextView
-                android:padding="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Categoría 3"
-                android:textColor="#000000" /> <!-- Texto negro -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:text="Categoría 4"
-                android:textColor="#000000" />
-
-            <!-- Texto negro -->
-
-        </LinearLayout>
-    </ScrollView>
+        android:layout_height="wrap_content"/>
 
     <!-- RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
