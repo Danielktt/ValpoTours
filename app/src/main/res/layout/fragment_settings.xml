@@ -23,18 +23,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
-        android:id="@+id/btnBack"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@android:color/transparent"
-        android:contentDescription="TODO"
-        android:paddingStart="30dp"
-        android:paddingTop="60dp"
-        android:src="@drawable/ic_back"
-        tools:ignore="MissingConstraints" />
-
-
     <TextView
         android:id="@+id/tvSettings"
         android:layout_width="wrap_content"
@@ -96,7 +84,7 @@
     </androidx.cardview.widget.CardView>
 
     <Button
-        android:id="@+id/BtnRegistrar"
+        android:id="@+id/btnLogOut"
         android:layout_width="325dp"
         android:layout_height="62dp"
         android:layout_marginTop="48dp"
@@ -107,6 +95,17 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
