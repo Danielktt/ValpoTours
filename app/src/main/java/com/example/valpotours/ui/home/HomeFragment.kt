@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.valpotours.Categorias
 import com.example.valpotours.LugarTuristicoProvider
+import com.example.valpotours.LugaresTuristico
 import com.example.valpotours.adapter.CategoriasAdapter
 import com.example.valpotours.adapter.LugarTuristicoAdapter
 import com.example.valpotours.databinding.FragmentHomeBinding
@@ -28,6 +29,7 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
     lateinit var db : FirebaseFirestore
     lateinit var categoriasArrayList: ArrayList<Categorias>
+    lateinit var lugaresArrayList: ArrayList<LugaresTuristico>
 
     override fun onCreateView(
         inflater: LayoutInflater,
