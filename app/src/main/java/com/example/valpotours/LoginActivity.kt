@@ -22,6 +22,7 @@ class LoginActivity : AppCompatActivity() {
 
     companion object {
         lateinit var userMail: String
+        const val EMAIL_KEY = "EMAIL"
     }
 
     private var email by Delegates.notNull<String>()
@@ -50,6 +51,7 @@ class LoginActivity : AppCompatActivity() {
         btnIngresar.setOnClickListener {
             // Llamamos a la función login cuando se hace clic en el botón de iniciar sesión
             progressBar.isVisible = true
+
             login()
         }
         val textRegistrarse = findViewById<TextView>(R.id.tvRegister2)
@@ -80,7 +82,12 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun login() {
-        loginUser()
+        if(etEmail.text.isEmpty() || etPassword.text.isEmpty()){
+            Toast.makeText(this, "Ingrese correo y contraseña", Toast.LENGTH_SHORT).show()
+            progressBar.isVisible = false
+        }else {
+            loginUser()
+        }
     }
 
     private fun loginUser() {
@@ -91,7 +98,7 @@ class LoginActivity : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     userMail = email
-                    goHome()
+                    goHome(userMail)
                 } else {
                     progressBar.isVisible = false
                     Toast.makeText(this, "Error al iniciar sesión. Por favor, verifica tus credenciales.", Toast.LENGTH_SHORT).show()
@@ -99,8 +106,9 @@ class LoginActivity : AppCompatActivity() {
             }
     }
 
-    private fun goHome() {
+    private fun goHome(userMail:String) {
         val intent = Intent(this, MainActivity::class.java)
+        intent.putExtra(EMAIL_KEY,userMail)
         startActivity(intent)
         finish() // Opcional: Finaliza LoginActivity para que no se pueda volver a ella con el botón atrás
     }

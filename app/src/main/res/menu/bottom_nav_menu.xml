@@ -13,6 +13,7 @@
         android:id="@+id/favoriteFragment"
         android:icon="@drawable/ic_navbar_favorite_unselected"
         app:showAsAction="ifRoom"
+        android:iconTint="@color/celeste_letra"
         />
 
     <item

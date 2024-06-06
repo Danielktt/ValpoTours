@@ -40,8 +40,9 @@
 
     <ImageView
         android:id="@+id/ivDetalleLugar"
-        android:layout_width="315dp"
+        android:layout_width="match_parent"
         android:layout_height="226dp"
+        android:scaleType="centerCrop"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnFavorito"/>

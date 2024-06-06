@@ -14,18 +14,20 @@ import com.example.valpotours.databinding.ItemLugarturisticoBinding
 
 class LugarTuristicoViewHolder(view: View): RecyclerView.ViewHolder(view){
 
+    companion object{
+        const val ID_KEY = "ID"
+    }
+
     val  binding = ItemLugarturisticoBinding.bind(view)
-    val lugarTuristico = view.findViewById<TextView>(R.id.tvLugarName)
-    val valoracion = view.findViewById<TextView>(R.id.tvValoration)
-    val photo = view.findViewById<ImageView>(R.id.ivLugar)
 
     fun render(lugarModel : LugaresTuristico){
-        lugarTuristico.text = lugarModel.nombre
-        valoracion.text = lugarModel.id
+        binding.tvLugarName.text = lugarModel.nombre
+        binding.tvValoration.text = lugarModel.id
         Glide.with(binding.ivLugar.context).load(lugarModel.urlimg).into(binding.ivLugar)
         binding.ivLugar.setOnClickListener{
             val context = it.context
             val intent = Intent(context,DetalleLugar::class.java)
+            intent.putExtra(ID_KEY, lugarModel.id)
             context.startActivity(intent)
         }
     }

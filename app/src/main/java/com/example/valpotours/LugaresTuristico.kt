@@ -1,7 +1,7 @@
 package com.example.valpotours
 
 data class LugaresTuristico(
-    val id:String? = null,
+    val id: String? = null,
     val categoria: String?= null,
     val direccion: String?= null,
     val latitud: String?= null,

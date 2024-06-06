@@ -44,11 +44,13 @@ class RegistroActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
         binding = ActivityRegistroBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initComponents()
         initListeners()
+    }
+
+    override fun onBackPressed() {
     }
 
     private fun initListeners() {
@@ -105,7 +107,7 @@ class RegistroActivity : AppCompatActivity() {
                                     )
                                     )
                                     binding.progressBar.isVisible = true
-                                    goHome(email)
+                                    goLogin()
                                 } else {
                                     Toast.makeText(
                                         this,
@@ -125,8 +127,8 @@ class RegistroActivity : AppCompatActivity() {
             }
     }
 
-    private fun goHome(email: String) {
-        val intent = Intent(this, HomeFragment::class.java)
+    private fun goLogin() {
+        val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
         finish()
     }
