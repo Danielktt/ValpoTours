@@ -1,5 +1,5 @@
 package com.example.valpotours
 
 data class Categorias (
-    var nombre: String ?= null
+    var categoria: String ?= null
 )

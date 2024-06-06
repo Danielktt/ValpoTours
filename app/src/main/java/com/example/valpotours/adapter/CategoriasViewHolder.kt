@@ -10,7 +10,7 @@ class CategoriasViewHolder (view: View):RecyclerView.ViewHolder(view){
     val binding = ItemCategoriaBinding.bind(view)
 
     fun render(CategoriaModel: Categorias){
-        binding.tvCategoryName.text = CategoriaModel.nombre
+        binding.tvCategoryName.text = CategoriaModel.categoria
     }
 
 }
