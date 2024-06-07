@@ -51,6 +51,7 @@ class RegistroActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
+        super.onBackPressed()
     }
 
     private fun initListeners() {
@@ -106,6 +107,7 @@ class RegistroActivity : AppCompatActivity() {
                                         "constraseña" to password
                                     )
                                     )
+                                    mAuth.currentUser?.sendEmailVerification()
                                     binding.progressBar.isVisible = true
                                     goLogin()
                                 } else {

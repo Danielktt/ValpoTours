@@ -94,11 +94,17 @@ class LoginActivity : AppCompatActivity() {
         email = etEmail.text.toString()
         password = etPassword.text.toString()
 
+
         mAuth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    userMail = email
-                    goHome(userMail)
+                    if(mAuth.currentUser?.isEmailVerified == true) {
+                        userMail = email
+                        goHome(userMail)
+                    }else{
+                        progressBar.isVisible = false
+                        Toast.makeText(this,"Usuario no autenticado",Toast.LENGTH_SHORT).show()
+                    }
                 } else {
                     progressBar.isVisible = false
                     Toast.makeText(this, "Error al iniciar sesión. Por favor, verifica tus credenciales.", Toast.LENGTH_SHORT).show()
