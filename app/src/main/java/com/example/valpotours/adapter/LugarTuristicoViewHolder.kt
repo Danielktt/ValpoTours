@@ -1,6 +1,7 @@
 package com.example.valpotours.adapter
 
 import android.content.Intent
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -11,13 +12,13 @@ import com.example.valpotours.DetalleLugar
 import com.example.valpotours.LugaresTuristico
 import com.example.valpotours.R
 import com.example.valpotours.databinding.ItemLugarturisticoBinding
+import com.google.firebase.firestore.FirebaseFirestore
 
 class LugarTuristicoViewHolder(view: View): RecyclerView.ViewHolder(view){
 
     companion object{
         const val ID_KEY = "ID"
     }
-
     val  binding = ItemLugarturisticoBinding.bind(view)
 
     fun render(lugarModel : LugaresTuristico){
@@ -32,3 +33,5 @@ class LugarTuristicoViewHolder(view: View): RecyclerView.ViewHolder(view){
         }
     }
 }
+
+//XFQ3+W2 Viña del Mar

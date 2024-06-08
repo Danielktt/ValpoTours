@@ -1,17 +1,14 @@
 package com.example.valpotours.ui.setting
 
-import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import androidx.core.view.isVisible
-import com.example.valpotours.LoginActivity
-import com.example.valpotours.R
+import androidx.fragment.app.Fragment
+import com.example.valpotours.MainActivity.Companion.logOut
 import com.example.valpotours.databinding.FragmentSettingsBinding
-import com.google.firebase.auth.FirebaseAuth
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -41,15 +38,11 @@ class SettingsFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
         binding = FragmentSettingsBinding.inflate(layoutInflater,container,false)
         // Inflate the layout for this fragment
-        binding.btnLogOut.setOnClickListener { singOf() }
+        binding.btnLogOut.setOnClickListener {
+            binding.progressBar.isVisible = true
+            logOut()
+        }
         return binding.root
-    }
-
-    private fun singOf() {
-        binding.progressBar.isVisible = true
-        FirebaseAuth.getInstance().signOut()
-        val intent = Intent(context, LoginActivity::class.java)
-        startActivity(intent)
     }
 
 }

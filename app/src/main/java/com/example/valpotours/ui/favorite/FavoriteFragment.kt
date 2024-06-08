@@ -100,7 +100,8 @@ class FavoriteFragment : Fragment() {
     private fun EvenChangeListenerPlaces(){
         db = FirebaseFirestore.getInstance()
         Log.i("PedroEsparrago","Hola")
-        db.collection("places").addSnapshotListener(object : EventListener<QuerySnapshot>{
+        db.collection("places").whereNotEqualTo("descripcion",null)
+            .addSnapshotListener(object : EventListener<QuerySnapshot>{
             override fun onEvent(
                 value: QuerySnapshot?,
                 error: FirebaseFirestoreException?
