@@ -2,6 +2,7 @@ package com.example.valpotours
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -11,10 +12,16 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.valpotours.LoginActivity.Companion.EMAIL_KEY
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.firestore.FirebaseFirestore
 
 class MainActivity : AppCompatActivity() {
 
+    companion object{
+        var listaFav:ArrayList<String> = arrayListOf()
+    }
+
     private lateinit var navController: NavController
+    private lateinit var db : FirebaseFirestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,12 +33,29 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        val userMail = intent.extras?.getString(EMAIL_KEY) ?: "null"
+        llenarListaFav()
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
         navController = navHostFragment.navController
 
         val  bottonnav = findViewById<BottomNavigationView>(R.id.nav_view)
         bottonnav.setupWithNavController(navController)
+    }
+
+    private fun llenarListaFav() {
+        db = FirebaseFirestore.getInstance()
+        Log.i("PedroEsparrago","Hola")
+        db.collection("usuario").whereEqualTo("email", LoginActivity.userMail)
+            .get()
+            .addOnSuccessListener {
+                    documents ->
+                for (document in documents) {
+                    //Log.i("PedroEsparrago","${document.id} == >${document.get("favoritos")}")
+                    listaFav = document.data.get("favoritos") as ArrayList<String>
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.i("Error getting documents: ", exception.toString())
+            }
     }
 }

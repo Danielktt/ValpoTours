@@ -9,6 +9,7 @@ import android.view.Menu
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -29,7 +30,7 @@ class RegistroActivity : AppCompatActivity() {
     private lateinit var etEmail: EditText
     private lateinit var etPassword: EditText
     private lateinit var etPassword2: EditText
-    private  lateinit var btnRegister: Button
+    private lateinit var btnRegister: Button
 
     private lateinit var mAuth: FirebaseAuth
 
@@ -51,12 +52,14 @@ class RegistroActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
     }
 
     private fun initListeners() {
         btnRegister.setOnClickListener {
             registerUser()
+        }
+        binding.tvSignInLink.setOnClickListener {
+            goLogin()
         }
     }
 

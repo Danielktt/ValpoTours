@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.valpotours.Categorias
 import com.example.valpotours.LoginActivity.Companion.userMail
 import com.example.valpotours.LugaresTuristico
+import com.example.valpotours.MainActivity.Companion.listaFav
 import com.example.valpotours.adapter.CategoriasAdapter
 import com.example.valpotours.adapter.LugarTuristicoAdapter
 import com.example.valpotours.databinding.FragmentFavoriteBinding
@@ -40,7 +41,6 @@ class FavoriteFragment : Fragment() {
     lateinit var binding: FragmentFavoriteBinding
     lateinit var categoriasArrayList: ArrayList<Categorias>
     lateinit var lugaresArrayList: ArrayList<LugaresTuristico>
-    lateinit var listaFav:ArrayList<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,7 +70,6 @@ class FavoriteFragment : Fragment() {
         binding.rvLugares.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.rvLugares.setHasFixedSize(true)
         lugaresArrayList = arrayListOf()
-        listaFav = arrayListOf()
         binding.rvLugares.adapter = LugarTuristicoAdapter(lugaresArrayList)
         EvenChangeListenerPlaces()
         return binding.root
@@ -92,7 +91,6 @@ class FavoriteFragment : Fragment() {
                             categoriasArrayList.add(dc.document.toObject(Categorias::class.java))
                         }
                     }
-
                     binding.rvCategories.adapter?.notifyDataSetChanged()
 
                 }
@@ -102,44 +100,34 @@ class FavoriteFragment : Fragment() {
     private fun EvenChangeListenerPlaces(){
         db = FirebaseFirestore.getInstance()
         Log.i("PedroEsparrago","Hola")
-
-        db.collection("usuario").whereEqualTo("email", userMail)
-            .get()
-            .addOnSuccessListener {
-                    documents ->
-                for (document in documents) {
-                    Log.i("PedroEsparrago","${document.id} == >${document.get("favoritos")}")
-                    db.collection("places").addSnapshotListener(object : EventListener<QuerySnapshot>{
-                        override fun onEvent(
-                            value: QuerySnapshot?,
-                            error: FirebaseFirestoreException?
-                        ) {
-                            if(error != null){
-                                Log.i("Firestore Error", error.message.toString())
-                                return
-                            }
-                            for(dc : DocumentChange in value?.documentChanges!!){
-                                Log.i("PedroEsparrago","${dc.document.id}")
-                                    if (dc.type == DocumentChange.Type.ADDED) {
-                                        lugaresArrayList.add(dc.document.toObject(LugaresTuristico::class.java))
-                                    }
-                            }
-                            binding.rvLugares.adapter?.notifyDataSetChanged()
-                        }
-                    })
+        db.collection("places").addSnapshotListener(object : EventListener<QuerySnapshot>{
+            override fun onEvent(
+                value: QuerySnapshot?,
+                error: FirebaseFirestoreException?
+            ) {
+                if(error != null){
+                    Log.i("Firestore Error", error.message.toString())
+                    return
                 }
+                for(dc : DocumentChange in value?.documentChanges!!){
+                    //Log.i("PedroEsparrago","${dc.document.id}")
+                    if(dc.document.id in listaFav){
+                        if (dc.type == DocumentChange.Type.ADDED) {
+                            lugaresArrayList.add(dc.document.toObject(LugaresTuristico::class.java))
+                        }
+                    }
+                }
+                binding.rvLugares.adapter?.notifyDataSetChanged()
             }
-            .addOnFailureListener { exception ->
-                Log.i("Error getting documents: ", exception.toString())
-            }
+        })
     }
+
 
     private fun initPerfil() {
         db = FirebaseFirestore.getInstance()
         db.collection("usuario").whereEqualTo("email", userMail)
             .get()
-            .addOnSuccessListener {
-                documents ->
+            .addOnSuccessListener { documents ->
                 for (document in documents) {
                     //Log.i("PedroEsparrago","${document.id} == >${document.data}")
                     binding.tvUserName.text = document.data.get("nombre").toString()
@@ -152,9 +140,3 @@ class FavoriteFragment : Fragment() {
 
     }
 }
-
-
-
-
-
-

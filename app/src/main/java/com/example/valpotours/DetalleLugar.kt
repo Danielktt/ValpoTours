@@ -1,5 +1,6 @@
 package com.example.valpotours
 
+import android.R.color
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -7,16 +8,18 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.bumptech.glide.Glide
+import com.example.valpotours.MainActivity.Companion.listaFav
 import com.example.valpotours.adapter.LugarTuristicoViewHolder.Companion.ID_KEY
 import com.example.valpotours.databinding.ActivityDetalleLugarBinding
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
 
+
 class DetalleLugar : AppCompatActivity() {
 
     private lateinit var binding: ActivityDetalleLugarBinding
     private lateinit var db: FirebaseFirestore
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -29,9 +32,9 @@ class DetalleLugar : AppCompatActivity() {
         }
         val id_place = intent.extras?.getString(ID_KEY) ?: "null"
         binding.btnBack.setOnClickListener{goHome()}
+        binding.btnFavorito.setOnClickListener { editarListaFavoritos() }
         initDetail(id_place as String)
     }
-
     private fun goHome() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
@@ -51,14 +54,16 @@ class DetalleLugar : AppCompatActivity() {
                     binding.tvCiudad.text = document.data.get("localidad").toString()
                     binding.tvDescription.text = document.data.get("descripcion").toString()
                     binding.btnComoLLegar.setOnClickListener {
-
+                    //agregar funcionalidades
+                    }
+                    if(document.id in listaFav){
+                        binding.btnFavorito.setImageResource(R.drawable.ic_favorite_true)
                     }
                 }
             }
-            .addOnFailureListener { exception ->
-                Log.i("Error getting documents: ", exception.toString())
-            }
-
+    }
+    private fun editarListaFavoritos() {
+        TODO("Not yet implemented")
     }
 
 }
