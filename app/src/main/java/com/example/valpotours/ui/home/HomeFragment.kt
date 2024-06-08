@@ -62,9 +62,10 @@ class HomeFragment : Fragment() {
         Log.d("HomeFragment", "Filtering places with query: $query")
         val filteredList = if (!query.isNullOrEmpty()) {
             lugaresArrayList.filter { lugar ->
-                val matches = lugar.nombre?.contains(query, ignoreCase = true) == true
-                Log.d("HomeFragment", "Filtering ${lugar.nombre}, matches: $matches")
-                matches
+                val matchesNombre = lugar.nombre?.contains(query, ignoreCase = true) == true
+                val matchesCategoria = lugar.categoria?.contains(query, ignoreCase = true) == true
+                Log.d("HomeFragment", "Filtering ${lugar.nombre}, nombre matches: $matchesNombre, categoria matches: $matchesCategoria")
+                matchesNombre || matchesCategoria
             }
         } else {
             originalLugaresArrayList // Restaura la lista original si la consulta está vacía
@@ -72,6 +73,7 @@ class HomeFragment : Fragment() {
         lugarTuristicoAdapter.updateList(ArrayList(filteredList))
         Log.d("HomeFragment", "Filtered list size: ${filteredList.size}")
     }
+
 
     private fun initRecycleView() {
         // INIT CATEGORIA
