@@ -7,7 +7,8 @@ import com.example.valpotours.LugaresTuristico
 import com.example.valpotours.R
 
 
-class LugarTuristicoAdapter(private val lugarturisticoList:ArrayList<LugaresTuristico>) : RecyclerView.Adapter<LugarTuristicoViewHolder>(){
+class LugarTuristicoAdapter(private var lugarturisticoList:ArrayList<LugaresTuristico>) : RecyclerView.Adapter<LugarTuristicoViewHolder>(){
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LugarTuristicoViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -19,6 +20,10 @@ class LugarTuristicoAdapter(private val lugarturisticoList:ArrayList<LugaresTuri
     override fun onBindViewHolder(holder: LugarTuristicoViewHolder, position: Int) {
         holder.render(lugarturisticoList[position])
 
+    }
+    fun updateList(newList: ArrayList<LugaresTuristico>) {
+        this.lugarturisticoList = newList
+        notifyDataSetChanged()
     }
 
 }

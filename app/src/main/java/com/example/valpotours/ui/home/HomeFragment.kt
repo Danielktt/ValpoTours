@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,99 +16,116 @@ import com.example.valpotours.adapter.CategoriasAdapter
 import com.example.valpotours.adapter.LugarTuristicoAdapter
 import com.example.valpotours.databinding.FragmentHomeBinding
 import com.google.firebase.firestore.DocumentChange
-import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreException
-import com.google.firebase.firestore.QuerySnapshot
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
-    lateinit var db : FirebaseFirestore
-    lateinit var categoriasArrayList: ArrayList<Categorias>
-    lateinit var lugaresArrayList: ArrayList<LugaresTuristico>
+    private lateinit var db: FirebaseFirestore
+    private lateinit var categoriasArrayList: ArrayList<Categorias>
+    private lateinit var lugaresArrayList: ArrayList<LugaresTuristico>
+    private lateinit var lugarTuristicoAdapter: LugarTuristicoAdapter
+    private lateinit var originalLugaresArrayList: ArrayList<LugaresTuristico> // Mantén una copia de la lista original
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
+        val homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
 
-
-        _binding = FragmentHomeBinding.inflate(layoutInflater, container, false)
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        initRecycleView()
 
+        db = FirebaseFirestore.getInstance()
+
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                Log.d("HomeFragment", "Query submitted: $query")
+                filterPlaces(query)
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                Log.d("HomeFragment", "Query text changed: $newText")
+                filterPlaces(newText)
+                return false
+            }
+        })
+
+        initRecycleView()
         return root
     }
 
+    private fun filterPlaces(query: String?) {
+        Log.d("HomeFragment", "Filtering places with query: $query")
+        val filteredList = if (!query.isNullOrEmpty()) {
+            lugaresArrayList.filter { lugar ->
+                val matches = lugar.nombre?.contains(query, ignoreCase = true) == true
+                Log.d("HomeFragment", "Filtering ${lugar.nombre}, matches: $matches")
+                matches
+            }
+        } else {
+            originalLugaresArrayList // Restaura la lista original si la consulta está vacía
+        }
+        lugarTuristicoAdapter.updateList(ArrayList(filteredList))
+        Log.d("HomeFragment", "Filtered list size: ${filteredList.size}")
+    }
+
     private fun initRecycleView() {
-        //INIT CATEGORIA
+        // INIT CATEGORIA
         binding.rvCategories.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.rvCategories.setHasFixedSize(true)
         categoriasArrayList = arrayListOf()
         binding.rvCategories.adapter = CategoriasAdapter(categoriasArrayList)
-        EventChangeListener()
-        //INIT PLACES
+        listenForCategoryChanges()
+
+        // INIT PLACES
         binding.recycleLugares.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.recycleLugares.setHasFixedSize(true)
         lugaresArrayList = arrayListOf()
-        binding.recycleLugares.adapter = LugarTuristicoAdapter(lugaresArrayList)
-        EvenChangeListenerPlaces()
+        originalLugaresArrayList = arrayListOf() // Inicializa la lista original
+        lugarTuristicoAdapter = LugarTuristicoAdapter(lugaresArrayList)
+        binding.recycleLugares.adapter = lugarTuristicoAdapter
+        listenForPlaceChanges()
     }
 
-    private fun EventChangeListener() {
-        db = FirebaseFirestore.getInstance()
-        db.collection("categorias")
-            .addSnapshotListener(object : EventListener<QuerySnapshot> {
-                override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
-
-                    if(error != null){
-                        Log.i("Firestore Error", error.message.toString())
-                        return
-                    }
-
-                    for(dc : DocumentChange in value?.documentChanges!!){
-                        if (dc.type == DocumentChange.Type.ADDED){
-                            categoriasArrayList.add(dc.document.toObject(Categorias::class.java))
-                        }
-                    }
-
-                    binding.rvCategories.adapter?.notifyDataSetChanged()
-
+    private fun listenForCategoryChanges() {
+        db.collection("categorias").addSnapshotListener { value, error ->
+            if (error != null) {
+                Log.i("Firestore Error", error.message.toString())
+                return@addSnapshotListener
+            }
+            for (dc: DocumentChange in value?.documentChanges!!) {
+                if (dc.type == DocumentChange.Type.ADDED) {
+                    categoriasArrayList.add(dc.document.toObject(Categorias::class.java))
                 }
-            })
+            }
+            binding.rvCategories.adapter?.notifyDataSetChanged()
+        }
     }
 
-    private fun EvenChangeListenerPlaces(){
-        db = FirebaseFirestore.getInstance()
-        db.collection("places")
-            .addSnapshotListener(object : EventListener<QuerySnapshot> {
-                override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
-
-                    if(error != null){
-                        Log.i("Firestore Error", error.message.toString())
-                        return
-                    }
-
-                    for(dc : DocumentChange in value?.documentChanges!!){
-                        if (dc.type == DocumentChange.Type.ADDED){
-                            lugaresArrayList.add(dc.document.toObject(LugaresTuristico::class.java))
-                        }
-                    }
-
-                    binding.recycleLugares.adapter?.notifyDataSetChanged()
-
+    private fun listenForPlaceChanges() {
+        db.collection("places").addSnapshotListener { value, error ->
+            if (error != null) {
+                Log.i("Firestore Error", error.message.toString())
+                return@addSnapshotListener
+            }
+            for (dc: DocumentChange in value?.documentChanges!!) {
+                if (dc.type == DocumentChange.Type.ADDED) {
+                    val lugar = dc.document.toObject(LugaresTuristico::class.java)
+                    lugaresArrayList.add(lugar)
+                    originalLugaresArrayList.add(lugar) // También agrega a la lista original
                 }
-            })
+            }
+            lugarTuristicoAdapter.updateList(lugaresArrayList)
+        }
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 }
+

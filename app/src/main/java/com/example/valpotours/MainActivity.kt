@@ -47,15 +47,18 @@ class MainActivity : AppCompatActivity() {
         Log.i("PedroEsparrago","Hola")
         db.collection("usuario").whereEqualTo("email", LoginActivity.userMail)
             .get()
-            .addOnSuccessListener {
-                    documents ->
+            .addOnSuccessListener { documents ->
                 for (document in documents) {
-                    //Log.i("PedroEsparrago","${document.id} == >${document.get("favoritos")}")
-                    listaFav = document.data.get("favoritos") as ArrayList<String>
+                    if (document.data.contains("favoritos")) {
+                        listaFav = document.data.get("favoritos") as ArrayList<String>
+                    } else {
+                        listaFav = ArrayList()
+                    }
                 }
             }
             .addOnFailureListener { exception ->
                 Log.i("Error getting documents: ", exception.toString())
             }
     }
+
 }
