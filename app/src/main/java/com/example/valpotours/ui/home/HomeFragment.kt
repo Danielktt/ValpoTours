@@ -109,7 +109,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun listenForPlaceChanges() {
-        db.collection("places").whereNotEqualTo("descripcion",null).addSnapshotListener { value, error ->
+        db.collection("places").addSnapshotListener { value, error ->
             if (error != null) {
                 Log.i("Firestore Error", error.message.toString())
                 return@addSnapshotListener
@@ -130,4 +130,3 @@ class HomeFragment : Fragment() {
         _binding = null
     }
 }
-
