@@ -22,6 +22,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object{
         var listaFav:ArrayList<String> = arrayListOf()
+        lateinit var idUser: String
         fun logOut(){
             //singOf()
         }
@@ -62,6 +63,7 @@ class MainActivity : AppCompatActivity() {
                     } else {
                         listaFav = ArrayList()
                     }
+                    idUser = document.id
                 }
             }
             .addOnFailureListener { exception ->
