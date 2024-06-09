@@ -39,13 +39,10 @@ class DetalleLugar : AppCompatActivity() {
         val id_place = intent.extras?.getString(ID_KEY).orEmpty()
         Log.i("PedroEsparrago","${id_place}")
         initDetail(id_place)
-        binding.btnBack.setOnClickListener{goHome()}
+        binding.btnBack.setOnClickListener{onBackPressed()}
         binding.btnFavorito.setOnClickListener { editarListaFavoritos(idLugar) }
     }
-    private fun goHome() {
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
-    }
+
 
     private fun initDetail(id_place: String) {
         db = FirebaseFirestore.getInstance()

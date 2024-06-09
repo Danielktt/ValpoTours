@@ -20,20 +20,9 @@ import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.QuerySnapshot
-import retrofit2.http.Path
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [FavoriteFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class FavoriteFragment : Fragment() {
-    // TODO: Rename and change types of parameters
+
     private var param1: String? = null
     private var param2: String? = null
 
@@ -41,88 +30,95 @@ class FavoriteFragment : Fragment() {
     lateinit var binding: FragmentFavoriteBinding
     lateinit var categoriasArrayList: ArrayList<Categorias>
     lateinit var lugaresArrayList: ArrayList<LugaresTuristico>
+    lateinit var originalLugaresArrayList: ArrayList<LugaresTuristico> // Mantén una copia de la lista original
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
 
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentFavoriteBinding.inflate(layoutInflater,container,false)
+        binding = FragmentFavoriteBinding.inflate(layoutInflater, container, false)
 
-        //INIT PERFIL
-        Log.i("PedroEsparrago","Iniciando Perfil")
+        // INIT PERFIL
         initPerfil()
-        //INIT CATEGORIES
+
+        // INIT CATEGORIAS
         binding.rvCategories.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.rvCategories.setHasFixedSize(true)
         categoriasArrayList = arrayListOf()
-        binding.rvCategories.adapter = CategoriasAdapter(categoriasArrayList)
+        binding.rvCategories.adapter = CategoriasAdapter(categoriasArrayList) { selectedCategory ->
+            filterPlacesByCategory(selectedCategory)
+        }
         EventChangeListenerCategories()
-        //INIT PLACES
+
+        // INIT LUGARES
         binding.rvLugares.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.rvLugares.setHasFixedSize(true)
         lugaresArrayList = arrayListOf()
+        originalLugaresArrayList = arrayListOf() // Inicializa la lista original
         binding.rvLugares.adapter = LugarTuristicoAdapter(lugaresArrayList)
         EvenChangeListenerPlaces()
+
         return binding.root
+    }
+
+    private fun filterPlacesByCategory(category: Categorias) {
+        val filteredList = if (category != null) {
+            lugaresArrayList.filter { lugar ->
+                category.categoria?.let { lugar.categoria?.contains(it, ignoreCase = true) } == true
+            }
+        } else {
+            originalLugaresArrayList // Restaura la lista original si la categoría está vacía
+        }
+        (binding.rvLugares.adapter as LugarTuristicoAdapter).updateList(ArrayList(filteredList))
+        Log.d("FavoriteFragment", "Filtered list size by category: ${filteredList.size}")
     }
 
     private fun EventChangeListenerCategories() {
         db = FirebaseFirestore.getInstance()
         db.collection("categorias")
-            .addSnapshotListener(object : EventListener<QuerySnapshot>{
+            .addSnapshotListener(object : EventListener<QuerySnapshot> {
                 override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
-
-                    if(error != null){
+                    if (error != null) {
                         Log.i("Firestore Error", error.message.toString())
                         return
                     }
-
-                    for(dc : DocumentChange in value?.documentChanges!!){
-                        if (dc.type == DocumentChange.Type.ADDED){
+                    for (dc: DocumentChange in value?.documentChanges!!) {
+                        if (dc.type == DocumentChange.Type.ADDED) {
                             categoriasArrayList.add(dc.document.toObject(Categorias::class.java))
                         }
                     }
                     binding.rvCategories.adapter?.notifyDataSetChanged()
-
                 }
             })
     }
 
-    private fun EvenChangeListenerPlaces(){
+    private fun EvenChangeListenerPlaces() {
         db = FirebaseFirestore.getInstance()
-        Log.i("PedroEsparrago","Hola")
-        db.collection("places").whereNotEqualTo("descripcion",null)
-            .addSnapshotListener(object : EventListener<QuerySnapshot>{
-            override fun onEvent(
-                value: QuerySnapshot?,
-                error: FirebaseFirestoreException?
-            ) {
-                if(error != null){
-                    Log.i("Firestore Error", error.message.toString())
-                    return
-                }
-                for(dc : DocumentChange in value?.documentChanges!!){
-                    //Log.i("PedroEsparrago","${dc.document.id}")
-                    if(dc.document.id in listaFav){
-                        if (dc.type == DocumentChange.Type.ADDED) {
-                            lugaresArrayList.add(dc.document.toObject(LugaresTuristico::class.java))
+        db.collection("places").whereNotEqualTo("descripcion", null)
+            .addSnapshotListener(object : EventListener<QuerySnapshot> {
+                override fun onEvent(
+                    value: QuerySnapshot?,
+                    error: FirebaseFirestoreException?
+                ) {
+                    if (error != null) {
+                        Log.i("Firestore Error", error.message.toString())
+                        return
+                    }
+                    for (dc: DocumentChange in value?.documentChanges!!) {
+                        if (dc.document.id in listaFav) {
+                            if (dc.type == DocumentChange.Type.ADDED) {
+                                val lugar = dc.document.toObject(LugaresTuristico::class.java)
+                                lugaresArrayList.add(lugar)
+                                originalLugaresArrayList.add(lugar) // También agrega a la lista original
+                            }
                         }
                     }
+                    (binding.rvLugares.adapter as LugarTuristicoAdapter).updateList(lugaresArrayList)
                 }
-                binding.rvLugares.adapter?.notifyDataSetChanged()
-            }
-        })
+            })
     }
-
 
     private fun initPerfil() {
         db = FirebaseFirestore.getInstance()
@@ -130,14 +126,12 @@ class FavoriteFragment : Fragment() {
             .get()
             .addOnSuccessListener { documents ->
                 for (document in documents) {
-                    //Log.i("PedroEsparrago","${document.id} == >${document.data}")
-                    binding.tvUserName.text = document.data.get("nombre").toString()
-                    binding.tvUseEmail.text = document.data.get("email").toString()
+                    binding.tvUserName.text = document.data["nombre"].toString()
+                    binding.tvUseEmail.text = document.data["email"].toString()
                 }
             }
             .addOnFailureListener { exception ->
                 Log.i("Error getting documents: ", exception.toString())
             }
-
     }
 }

@@ -27,6 +27,7 @@ class HomeFragment : Fragment() {
     private lateinit var lugaresArrayList: ArrayList<LugaresTuristico>
     private lateinit var lugarTuristicoAdapter: LugarTuristicoAdapter
     private lateinit var originalLugaresArrayList: ArrayList<LugaresTuristico> // Mantén una copia de la lista original
+    private var selectedCategory: Categorias? = null // Variable para mantener la categoría seleccionada
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -74,13 +75,14 @@ class HomeFragment : Fragment() {
         Log.d("HomeFragment", "Filtered list size: ${filteredList.size}")
     }
 
-
     private fun initRecycleView() {
         // INIT CATEGORIA
         binding.rvCategories.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.rvCategories.setHasFixedSize(true)
         categoriasArrayList = arrayListOf()
-        binding.rvCategories.adapter = CategoriasAdapter(categoriasArrayList)
+        binding.rvCategories.adapter = CategoriasAdapter(categoriasArrayList) { selectedCategory ->
+            filterPlacesByCategory(selectedCategory)
+        }
         listenForCategoryChanges()
 
         // INIT PLACES
@@ -91,6 +93,23 @@ class HomeFragment : Fragment() {
         lugarTuristicoAdapter = LugarTuristicoAdapter(lugaresArrayList)
         binding.recycleLugares.adapter = lugarTuristicoAdapter
         listenForPlaceChanges()
+    }
+
+    private fun filterPlacesByCategory(category: Categorias) {
+        val filteredList: List<LugaresTuristico>
+        if (category == selectedCategory) {
+            // Si la categoría seleccionada es la misma, restaura la lista original
+            filteredList = originalLugaresArrayList
+            selectedCategory = null // Restablece la categoría seleccionada
+        } else {
+            // Si se selecciona una nueva categoría, filtra la lista
+            filteredList = lugaresArrayList.filter { lugar ->
+                category.categoria?.let { lugar.categoria?.contains(it, ignoreCase = true) } == true
+            }
+            selectedCategory = category // Actualiza la categoría seleccionada
+        }
+        lugarTuristicoAdapter.updateList(ArrayList(filteredList))
+        Log.d("FavoriteFragment", "Filtered list size by category: ${filteredList.size}")
     }
 
     private fun listenForCategoryChanges() {
