@@ -1,6 +1,6 @@
+
 package com.example.valpotours
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.enableEdgeToEdge
@@ -12,20 +12,17 @@ import com.example.valpotours.MainActivity.Companion.idUser
 import com.example.valpotours.MainActivity.Companion.listaFav
 import com.example.valpotours.adapter.LugarTuristicoViewHolder.Companion.ID_KEY
 import com.example.valpotours.databinding.ActivityDetalleLugarBinding
-import com.google.firebase.Firebase
+import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.firestore
 import com.squareup.picasso.Picasso
-
 
 class DetalleLugar : AppCompatActivity() {
 
     private lateinit var binding: ActivityDetalleLugarBinding
     private lateinit var db: FirebaseFirestore
-    //private val db2 = FirebaseFirestore.getInstance()
     private lateinit var idLugar: String
-
+    private lateinit var comentarioList: ArrayList<Comentario>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -37,30 +34,28 @@ class DetalleLugar : AppCompatActivity() {
             insets
         }
         val id_place = intent.extras?.getString(ID_KEY).orEmpty()
-        Log.i("PedroEsparrago","${id_place}")
+        db = FirebaseFirestore.getInstance()
         initDetail(id_place)
-        binding.btnBack.setOnClickListener{onBackPressed()}
+        binding.btnBack.setOnClickListener { onBackPressed() }
         binding.btnFavorito.setOnClickListener { editarListaFavoritos(idLugar) }
+        binding.btnPublicarComentario.setOnClickListener { publicarComentario() }
     }
-
 
     private fun initDetail(id_place: String) {
         db = FirebaseFirestore.getInstance()
-        db.collection("places").whereNotEqualTo("descripcion",null)
+        db.collection("places").whereNotEqualTo("descripcion", null)
             .get()
-            .addOnSuccessListener {
-                    documents ->
+            .addOnSuccessListener { documents ->
                 for (document in documents) {
-                    if(document.data.get("id")==id_place) {
+                    if (document.data["id"] == id_place) {
                         Log.i("PedroEsparrago", "${document.id} == >${document.data}")
-                        Picasso.get().load(document.data.get("urlimg").toString())
-                            .into(binding.ivDetalleLugar);
-                        //Glide.with(binding.ivDetalleLugar.context).load(document.data.get("urlimg")).into(binding.ivDetalleLugar)
-                        binding.tvNombre.text = document.data.get("nombre").toString()
-                        binding.tvCiudad.text = document.data.get("localidad").toString()
-                        binding.tvDescription.text = document.data.get("descripcion").toString()
+                        Picasso.get().load(document.data["urlimg"].toString())
+                            .into(binding.ivDetalleLugar)
+                        binding.tvNombre.text = document.data["nombre"].toString()
+                        binding.tvCiudad.text = document.data["localidad"].toString()
+                        binding.tvDescription.text = document.data["descripcion"].toString()
                         binding.btnComoLLegar.setOnClickListener {
-                            //agregar funcionalidades
+                            // agregar funcionalidades
                         }
                         idLugar = document.id
                         if (document.id in listaFav) {
@@ -68,31 +63,112 @@ class DetalleLugar : AppCompatActivity() {
                         }
                     }
                 }
+                actualizarContadorComentarios()
+
             }
     }
+
     private fun editarListaFavoritos(idLugar: String) {
         db = FirebaseFirestore.getInstance()
         val favoritoRef = db.collection("usuario").document(idUser)
-        Log.i("PedroEsparrago","${idLugar}")
-        if(idLugar in listaFav){
-            favoritoRef.update("favoritos",FieldValue.arrayRemove(idLugar))
+        Log.i("PedroEsparrago", "$idLugar")
+        if (idLugar in listaFav) {
+            favoritoRef.update("favoritos", FieldValue.arrayRemove(idLugar))
             listaFav.remove(idLugar)
             binding.btnFavorito.setImageResource(R.drawable.ic_favorite_false)
-            Log.i("PedroEsparrago","${idUser}")
-            Log.i("PedroEsparrago","${listaFav}")
-            Log.i("PedroEsparrago","${favoritoRef}")
-        }else{
-            favoritoRef.update("favoritos",FieldValue.arrayUnion(idLugar)).addOnSuccessListener {
+            Log.i("PedroEsparrago", "$idUser")
+            Log.i("PedroEsparrago", "$listaFav")
+            Log.i("PedroEsparrago", "$favoritoRef")
+        } else {
+            favoritoRef.update("favoritos", FieldValue.arrayUnion(idLugar)).addOnSuccessListener {
                 listaFav.add(idLugar)
                 binding.btnFavorito.setImageResource(R.drawable.ic_favorite_true)
-                Log.i("PedroEsparrago","${idUser}")
-                Log.i("PedroEsparrago","${listaFav}")
-                Log.i("PedroEsparrago","${favoritoRef}")
+                Log.i("PedroEsparrago", "$idUser")
+                Log.i("PedroEsparrago", "$listaFav")
+                Log.i("PedroEsparrago", "$favoritoRef")
+            }.addOnFailureListener { e ->
+                Log.w("PedroEsparrago", "Error al agregar el valor al array", e)
             }
-                .addOnFailureListener { e ->
-                    Log.w("PedroEsparrago", "Error al agregar el valor al array", e)
-                }
-
         }
     }
-}
+
+    private fun publicarComentario() {
+        val comentario = binding.etComentario.text.toString().trim()
+        if (comentario.isEmpty()) {
+            // Mostrar un mensaje de error si el comentario está vacío
+            return
+        }
+        // Verificar si el usuario ya ha comentado en este lugar
+        db.collection("comentarios")
+            .whereEqualTo("idLugar", idLugar)
+            .whereEqualTo("nombreUsuario", userMail)
+            .get()
+            .addOnSuccessListener { documents ->
+                if (documents.isEmpty) {
+                    // Si el usuario no ha comentado previamente en este lugar, agregar el comentario
+                    val comentarioData = hashMapOf(
+                        "comentario" to comentario,
+                        "nombreUsuario" to userMail,
+                        "idLugar" to idLugar,
+                        "timestamp" to FieldValue.serverTimestamp()
+                    )
+                    db.collection("comentarios").add(comentarioData)
+                        .addOnSuccessListener {
+                            Log.i("PedroEsparrago", "Comentario publicado exitosamente")
+                            binding.etComentario.text.clear()
+                            // Actualizar el contador de comentarios
+                            actualizarContadorComentarios()
+                        }
+                        .addOnFailureListener { e ->
+                            Log.w("PedroEsparrago", "Error al publicar el comentario", e)
+                        }
+                } else {
+                    // Dentro del método initDetail()
+                    if (!documents.isEmpty) {
+                        // Si el usuario ya ha comentado en este lugar, deshabilitar el botón de comentario
+                        binding.btnPublicarComentario.isEnabled = false
+                        binding.btnPublicarComentario.text = "Ya has comentado aquí"
+                    } else {
+                        // Si el usuario no ha comentado, habilitar el botón de comentario
+                        binding.btnPublicarComentario.isEnabled = true
+                        binding.btnPublicarComentario.text = "Publicar Comentario"
+                    }
+
+
+                    Log.w("PedroEsparrago", "El usuario ya ha comentado en este lugar.")
+                }
+            }
+    }
+
+    private fun actualizarContadorComentarios() {
+        // Consultar la cantidad de comentarios para el lugar actual
+        db.collection("comentarios")
+            .whereEqualTo("idLugar", idLugar)
+            .get()
+            .addOnSuccessListener { documents ->
+                // Obtener el número de comentarios y actualizar el TextView
+                val commentCount = documents.size()
+                binding.textViewCommentCount.text = "Comentarios: $commentCount"
+            }
+            .addOnFailureListener { e ->
+                Log.w("PedroEsparrago", "Error al obtener la cantidad de comentarios", e)
+            }
+    }
+
+
+    private fun listenForCommentChanges() {
+            db.collection("comentarios").addSnapshotListener { value, error ->
+                if (error != null) {
+                    Log.i("Firestore Error", error.message.toString())
+                    return@addSnapshotListener
+                }
+                for (dc: DocumentChange in value?.documentChanges!!) {
+                    if (dc.type == DocumentChange.Type.ADDED) {
+                        val comentario = dc.document.toObject(Comentario::class.java)
+                        comentarioList.add(comentario)
+                        Log.w("PedroEsparrago", "Cantidad de Comentario: $comentarioList")
+                    }
+                }
+            }
+        }
+    }

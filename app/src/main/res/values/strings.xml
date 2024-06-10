@@ -30,14 +30,19 @@
     <string name="detail">Detalle</string>
     <string name="value">Valorar</string>
     <string name="description">Descripción</string>
+    <string name="publicar">publicar</string>
+
     <string name="how_to_get">Como llegar</string>
     <string name="add_to_tour">Agregar a recorrido</string>
 
     <!-- Editar-->
+    <string name="add_comment">Agregar comentario aqui</string>
     <string name="edit">Editar</string>
+
     <string name="edit_password">¿Cambiar contraseña?</string>
     <string name="edit_photo">¿Cambiar foto de perfil?</string>
     <string name="see_tours">Ver recorrido</string>
+    <string name="submit">Ver recorrido</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
