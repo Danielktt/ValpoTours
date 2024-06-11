@@ -7,9 +7,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.valpotours.LoginActivity.Companion.userMail
 import com.example.valpotours.MainActivity.Companion.idUser
 import com.example.valpotours.MainActivity.Companion.listaFav
+import com.example.valpotours.adapter.ComentarioAdapter
 import com.example.valpotours.adapter.LugarTuristicoViewHolder.Companion.ID_KEY
 import com.example.valpotours.databinding.ActivityDetalleLugarBinding
 import com.google.firebase.firestore.DocumentChange
@@ -23,6 +25,7 @@ class DetalleLugar : AppCompatActivity() {
     private lateinit var db: FirebaseFirestore
     private lateinit var idLugar: String
     private lateinit var comentarioList: ArrayList<Comentario>
+    private lateinit var comentarioAdapter: ComentarioAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -65,27 +68,25 @@ class DetalleLugar : AppCompatActivity() {
                 }
                 actualizarContadorComentarios()
 
+                binding.recyclerViewComentarios.layoutManager = LinearLayoutManager(this)
+                binding.recyclerViewComentarios.setHasFixedSize(true)
+                comentarioList = arrayListOf()
+                binding.recyclerViewComentarios.adapter = ComentarioAdapter(comentarioList)
+                listenForCommentChanges()
             }
     }
 
     private fun editarListaFavoritos(idLugar: String) {
         db = FirebaseFirestore.getInstance()
         val favoritoRef = db.collection("usuario").document(idUser)
-        Log.i("PedroEsparrago", "$idLugar")
         if (idLugar in listaFav) {
             favoritoRef.update("favoritos", FieldValue.arrayRemove(idLugar))
             listaFav.remove(idLugar)
             binding.btnFavorito.setImageResource(R.drawable.ic_favorite_false)
-            Log.i("PedroEsparrago", "$idUser")
-            Log.i("PedroEsparrago", "$listaFav")
-            Log.i("PedroEsparrago", "$favoritoRef")
         } else {
             favoritoRef.update("favoritos", FieldValue.arrayUnion(idLugar)).addOnSuccessListener {
                 listaFav.add(idLugar)
                 binding.btnFavorito.setImageResource(R.drawable.ic_favorite_true)
-                Log.i("PedroEsparrago", "$idUser")
-                Log.i("PedroEsparrago", "$listaFav")
-                Log.i("PedroEsparrago", "$favoritoRef")
             }.addOnFailureListener { e ->
                 Log.w("PedroEsparrago", "Error al agregar el valor al array", e)
             }
@@ -157,18 +158,27 @@ class DetalleLugar : AppCompatActivity() {
 
 
     private fun listenForCommentChanges() {
+        Log.i("PedroEsparrago", "Paso 1")
             db.collection("comentarios").addSnapshotListener { value, error ->
                 if (error != null) {
+                    Log.i("PedroEsparrago", "Paso 2")
                     Log.i("Firestore Error", error.message.toString())
                     return@addSnapshotListener
                 }
                 for (dc: DocumentChange in value?.documentChanges!!) {
+                    Log.i("PedroEsparrago", "Paso 3")
                     if (dc.type == DocumentChange.Type.ADDED) {
+                        Log.i("PedroEsparrago", "Paso 4")
                         val comentario = dc.document.toObject(Comentario::class.java)
-                        comentarioList.add(comentario)
-                        Log.w("PedroEsparrago", "Cantidad de Comentario: $comentarioList")
+                        if(dc.document.data["idLugar"] == idLugar) {
+                            comentarioList.add(comentario)
+                            Log.i("PedroEsparrago", "Paso 5")
+
+                            Log.i("PedroEsparrago", "Cantidad de Comentario: ${comentarioList}")
+                        }
                     }
                 }
+               binding.recyclerViewComentarios.adapter?.notifyDataSetChanged()
             }
         }
-    }
+}

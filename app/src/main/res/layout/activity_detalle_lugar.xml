@@ -1,58 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:orientation="vertical"
     android:id="@+id/DetalleLugar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".DetalleLugar">
 
 
-<LinearLayout
+    <LinearLayout
+        android:id="@+id/llTOP"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="20dp"
-        android:orientation="horizontal">
-        <ImageButton
-            android:id="@+id/btnBack"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_back"
-            android:backgroundTint="@android:color/transparent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:orientation="horizontal"
+            android:padding="8dp"
+            >
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toEndOf="@+id/btnBack"
-            app:layout_constraintEnd_toStartOf="@+id/btnFavorito"
-            android:textStyle="bold"
-            android:text="@string/detail"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="12dp" />
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-        <ImageButton
-            android:id="@+id/btnFavorito"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity=""
-            android:backgroundTint="@android:color/transparent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_favorite_false"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-        ></LinearLayout>
+            <ImageButton
+                android:id="@+id/btnBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@android:color/transparent"
+                android:src="@drawable/ic_back"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_weight="0."/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_weight="1"
+                android:text="@string/detail"
+                android:textStyle="bold"
+                android:layout_marginStart="130dp"
+                app:layout_constraintEnd_toStartOf="@+id/btnFavorito"
+                app:layout_constraintStart_toEndOf="@+id/btnBack"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+            <ImageButton
+                android:id="@+id/btnFavorito"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:backgroundTint="@android:color/transparent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_favorite_false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </LinearLayout>
 
 
         <ImageView
@@ -60,94 +62,94 @@
             android:layout_width="match_parent"
             android:layout_height="226dp"
             android:scaleType="centerCrop"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btnFavorito" />
 
         <!-- Resto del contenido como el nombre, ciudad, valoración, etc. -->
-    <TextView
-        android:id="@+id/tvNombre"
-        android:layout_marginLeft="16dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:text="Hola mundo"
-        app:layout_constraintTop_toBottomOf="@+id/ivDetalleLugar"
-        app:layout_constraintStart_toStartOf="parent"
-        android:textStyle="bold"
-        android:textSize="24sp" />
-
-    <LinearLayout
-        android:id="@+id/lyValoracion"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        app:layout_constraintTop_toBottomOf="@+id/tvCiudad">
-
-        <ImageView
+        <TextView
+            android:id="@+id/tvNombre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
-            android:layout_width="wrap_content"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ivDetalleLugar"
+            tools:text="Hola mundo" />
+
+        <LinearLayout
+            android:id="@+id/lyValoracion"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_rating" />
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/tvCiudad">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:src="@drawable/ic_rating" />
+
+            <TextView
+                android:id="@+id/tvRating"
+                android:layout_width="10dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="TextView" />
+
+            <TextView
+                android:id="@+id/textViewCommentCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="10dp"
+                tools:text="4.8" />
+
+            <Button
+                android:id="@+id/btnValorar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="12dp"
+                android:backgroundTint="@color/celeste"
+                android:text="@string/value" />
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/tvRating"
-            android:layout_width="10dp"
+            android:id="@+id/tvCiudad"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="TextView" />
-
-        <TextView
-            android:id="@+id/textViewCommentCount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:layout_weight="1"
-            tools:text="4.8" />
-
-        <Button
-            android:id="@+id/btnValorar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/value"
-            android:backgroundTint="@color/celeste"
-            android:layout_marginRight="12dp" />
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/tvCiudad"
-        android:layout_marginLeft="16dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:text="Ciudad"
-        app:layout_constraintTop_toBottomOf="@+id/tvNombre"
-        app:layout_constraintStart_toStartOf="parent"
-        android:textColor="@color/color_ciudad" />
+            android:layout_marginLeft="16dp"
+            android:textColor="@color/color_ciudad"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvNombre"
+            tools:text="Ciudad" />
         <!-- Descripción -->
         <LinearLayout
             android:id="@+id/llDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/description"
-                android:textStyle="bold"
-                android:textSize="16sp"
+                android:layout_marginLeft="12dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginLeft="12dp" />
+                android:text="@string/description"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvDescription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
                 android:layout_marginTop="20dp"
+                android:layout_marginRight="8dp"
                 android:textColor="@color/color_ciudad"
                 tools:text="Tierra de fuego es un espacio ubicado directamente frente y sobre el mar, donde invitamos a vivir la experiencia de comer y beber con una inigualable vista del Océano Pacífico nuestros productos de excelencia, los cuales han tomado un largo tiempo en encontrar la selección tanto de calidad como frescura. Aquí encontrará pescados frescos, corderos y centollas magallánicas y carnes de primera calidad, los cuales pasan por una rígida selección, para poner en su mesa una mezcla de calidad y sabor." />
         </LinearLayout>
@@ -157,12 +159,12 @@
             android:id="@+id/llAddComment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
             android:layout_margin="8dp"
-            app:layout_constraintTop_toBottomOf="@id/llDescription"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/llDescription">
 
             <EditText
                 android:id="@+id/etComentario"
@@ -178,47 +180,45 @@
                 android:id="@+id/btnPublicarComentario"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/publicar"
-                android:backgroundTint="@color/celeste" />
+                android:backgroundTint="@color/celeste"
+                android:text="@string/publicar" />
         </LinearLayout>
 
-        <!-- RecyclerView para los comentarios -->
-
-    <!-- Botones al final -->
+    <!-- RecyclerView para los comentarios -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewComentarios"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@id/btnComoLLegar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/llAddComment"
-        tools:ignore="NotSibling" />
+        />
 
-    <LinearLayout
+
+        <!-- Botones al final -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
             android:gravity="center_vertical|end|center"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/recyclerViewComentarios">
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent">
 
             <Button
                 android:id="@+id/btnComoLLegar"
                 android:layout_width="0dp"
                 android:layout_height="62dp"
-                android:text="@string/how_to_get"
+                android:layout_marginRight="3dp"
+                android:layout_weight="1"
                 android:backgroundTint="@color/celeste"
-                android:layout_weight="1" />
+                android:text="@string/how_to_get" />
 
             <Button
                 android:id="@+id/btnAddToTour"
                 android:layout_width="0dp"
                 android:layout_height="62dp"
-                android:text="@string/add_to_tour"
+                android:layout_marginLeft="3dp"
+                android:layout_weight="1"
                 android:backgroundTint="@color/celeste"
-                android:layout_weight="1" />
+                android:text="@string/add_to_tour" />
         </LinearLayout>
 
     </LinearLayout>

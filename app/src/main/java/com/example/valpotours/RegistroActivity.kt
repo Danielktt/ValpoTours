@@ -82,12 +82,12 @@ class RegistroActivity : AppCompatActivity() {
 
 
         if (fullName.isEmpty() || email.isEmpty() || password.isEmpty() || password2.isEmpty()) {
-            Toast.makeText(this, "Por favor, completa todos los campos.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.please_complete_all_fields, Toast.LENGTH_SHORT).show()
             return
         }
 
         if (password != password2) {
-            Toast.makeText(this, "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.passwords_do_not_match, Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -116,7 +116,7 @@ class RegistroActivity : AppCompatActivity() {
                                 } else {
                                     Toast.makeText(
                                         this,
-                                        "Algo ha salido mal al actualizar el perfil",
+                                        R.string.Something_went_wrong_while_updating_the_profile,
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 }
@@ -125,7 +125,7 @@ class RegistroActivity : AppCompatActivity() {
                 } else {
                     Toast.makeText(
                         this,
-                        "Algo ha salido mal al registrarse: ${task.exception?.message}",
+                        R.string.enter_a_valid_email_and_a_password_of_at_least_6_characters,
                         Toast.LENGTH_SHORT
                     ).show()
                 }

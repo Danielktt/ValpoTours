@@ -1,6 +1,5 @@
 package com.example.valpotours
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -8,11 +7,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.isVisible
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import com.example.valpotours.LoginActivity.Companion.EMAIL_KEY
 import com.example.valpotours.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -23,10 +20,9 @@ class MainActivity : AppCompatActivity() {
     companion object{
         var listaFav:ArrayList<String> = arrayListOf()
         lateinit var idUser: String
-        fun logOut(){
-            //singOf()
-        }
     }
+
+
 
     private lateinit var navController: NavController
     private lateinit var db : FirebaseFirestore
@@ -69,13 +65,6 @@ class MainActivity : AppCompatActivity() {
             .addOnFailureListener { exception ->
                 Log.i("Error getting documents: ", exception.toString())
             }
-    }
-
-    fun singOf() {
-        FirebaseAuth.getInstance().signOut()
-        val intent = Intent(this, LoginActivity::class.java)
-        startActivity(intent)
-        finish()
     }
 
 }

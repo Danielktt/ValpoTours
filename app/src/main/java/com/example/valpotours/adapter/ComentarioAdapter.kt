@@ -10,7 +10,7 @@ class ComentarioAdapter(private val comentarioList:ArrayList<Comentario>) :Recyc
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ComentariosViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        return ComentariosViewHolder(layoutInflater.inflate(R.layout.item_categoria,parent,false))
+        return ComentariosViewHolder(layoutInflater.inflate(R.layout.item_comentario,parent,false))
     }
 
     override fun onBindViewHolder(holder: ComentariosViewHolder, position: Int) {

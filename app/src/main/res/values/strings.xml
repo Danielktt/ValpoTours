@@ -10,12 +10,24 @@
     <string name="register">Registrarse</string>
     <string name="already_have_an_account">¿ya tienes una cuenta?</string>
     <string name="sign_in">iniciar sesión</string>
+    <string name="please_complete_all_fields">Por favor, completa todos los campos</string>
+    <string name="passwords_do_not_match">Las contraseñas no coinciden</string>
+    <string name="Something_went_wrong_while_updating_the_profile">Algo ha salido mal al actualizar el perfil</string>
+    <string name="enter_a_valid_email_and_a_password_of_at_least_6_characters">Ingrese un correo válido y una contraseña de al menos 6 caraceteres</string>
+
     <!-- Login-->
     <string name="forgot_password">Olvido su contraseña</string>
     <string name="login">Ingresar</string>
     <string name="next_without_account">Continuar Sin registrar</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="singup">¿No tiene una cuenta?,</string>
+    <string name="enter_email">Ingrese correo</string>
+    <string name="reset_email_sent">Correo de restablecimiento enviado</string>
+    <string name="invalid_email">Correo inválido</string>
+    <string name="enter_email_and_password">Ingrese correo y contraseña</string>
+    <string name="user_not_authenticated">Usuario no autenticado</string>
+    <string name="login_failed_Please_verify_your_credentials">Error al iniciar sesión. Por favor, verifica tus credenciales</string>
+
     <!-- Configuración -->
     <string name="settings">Configuración</string>
     <string name="log_out">Cerrar sesión</string>
@@ -38,6 +50,7 @@
     <!-- Editar-->
     <string name="add_comment">Agregar comentario aqui</string>
     <string name="edit">Editar</string>
+    <!-- hasta aqui -->
 
     <string name="edit_password">¿Cambiar contraseña?</string>
     <string name="edit_photo">¿Cambiar foto de perfil?</string>

@@ -66,24 +66,28 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    override fun onBackPressed() {
+
+    }
+
     fun resetPassword() {
         val e = etEmail.text.toString()
         if (!TextUtils.isEmpty(e)) {
             mAuth.sendPasswordResetEmail(e)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful)
-                        Toast.makeText(this, "Correo de restablecimiento enviado.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, R.string.reset_email_sent, Toast.LENGTH_SHORT).show()
                     else
-                        Toast.makeText(this, "Correo inválido.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, R.string.invalid_email, Toast.LENGTH_SHORT).show()
                 }
         } else {
-            Toast.makeText(this, "Ingrese correo.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.enter_email, Toast.LENGTH_SHORT).show()
         }
     }
 
     fun login() {
         if(etEmail.text.isEmpty() || etPassword.text.isEmpty()){
-            Toast.makeText(this, "Ingrese correo y contraseña", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.enter_email_and_password, Toast.LENGTH_SHORT).show()
             progressBar.isVisible = false
         }else {
             loginUser()
@@ -103,11 +107,11 @@ class LoginActivity : AppCompatActivity() {
                         goHome(userMail)
                     }else{
                         progressBar.isVisible = false
-                        Toast.makeText(this,"Usuario no autenticado",Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this,R.string.user_not_authenticated,Toast.LENGTH_SHORT).show()
                     }
                 } else {
                     progressBar.isVisible = false
-                    Toast.makeText(this, "Error al iniciar sesión. Por favor, verifica tus credenciales.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, R.string.login_failed_Please_verify_your_credentials, Toast.LENGTH_SHORT).show()
                 }
             }
     }
