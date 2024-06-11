@@ -1,6 +1,7 @@
 
 package com.example.valpotours
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.enableEdgeToEdge
@@ -58,7 +59,7 @@ class DetalleLugar : AppCompatActivity() {
                         binding.tvCiudad.text = document.data["localidad"].toString()
                         binding.tvDescription.text = document.data["descripcion"].toString()
                         binding.btnComoLLegar.setOnClickListener {
-                            // agregar funcionalidades
+                            navigateToMap()
                         }
                         idLugar = document.id
                         if (document.id in listaFav) {
@@ -75,6 +76,8 @@ class DetalleLugar : AppCompatActivity() {
                 listenForCommentChanges()
             }
     }
+
+
 
     private fun editarListaFavoritos(idLugar: String) {
         db = FirebaseFirestore.getInstance()
@@ -181,4 +184,9 @@ class DetalleLugar : AppCompatActivity() {
                binding.recyclerViewComentarios.adapter?.notifyDataSetChanged()
             }
         }
+
+    private fun navigateToMap() {
+        val intent = Intent(this, MapActivity::class.java)
+        startActivity(intent)
+    }
 }
