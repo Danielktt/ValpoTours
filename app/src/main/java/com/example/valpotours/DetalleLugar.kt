@@ -47,6 +47,8 @@ class DetalleLugar : AppCompatActivity() {
         binding.btnFavorito.setOnClickListener { editarListaFavoritos(idLugar) }
         binding.btnPublicarComentario.setOnClickListener { publicarComentario() }
         binding.btnValorar.setOnClickListener { valorarLugar() }
+        binding.btnEliminarValoracion.setOnClickListener { eliminarValoracion() } // Listener agregado aquí
+
     }
 
     private fun initDetail(id_place: String) {
@@ -204,19 +206,22 @@ class DetalleLugar : AppCompatActivity() {
                     userHasRated = false
                     actualizarPromedioRating()
                     binding.rbValoracion.visibility = View.VISIBLE
-                    binding.tvValoracionPromedio.visibility = View.VISIBLE
+                    binding.btnValorar.visibility = View.VISIBLE
+                    binding.btnEliminarValoracion.visibility = View.GONE
                 } else {
                     userHasRated = true
                     val rating = documents.first().get("rating") as? Double ?: 0.0
                     binding.rbValoracion.rating = rating.toFloat()
                     binding.rbValoracion.visibility = View.GONE
-                    binding.tvValoracionPromedio.visibility = View.VISIBLE // Cambiado a VISIBLE
+                    binding.btnValorar.visibility = View.GONE
+                    binding.btnEliminarValoracion.visibility = View.VISIBLE
                 }
             }
             .addOnFailureListener { e ->
                 Log.w("PedroEsparrago", "Error al verificar la valoración del usuario", e)
             }
     }
+
 
     private fun valorarLugar() {
         if (!userHasRated) {
@@ -231,7 +236,8 @@ class DetalleLugar : AppCompatActivity() {
                 .addOnSuccessListener {
                     Log.i("PedroEsparrago", "Valoración guardada exitosamente")
                     userHasRated = true
-                    binding.btnValorar.text = "Valorado"
+                    binding.btnValorar.visibility = View.GONE
+                    binding.btnEliminarValoracion.visibility = View.VISIBLE
                     binding.rbValoracion.visibility = View.GONE
                     actualizarPromedioRating()
                 }
@@ -243,6 +249,32 @@ class DetalleLugar : AppCompatActivity() {
             binding.tvValoracionPromedio.visibility = View.VISIBLE
         }
         actualizarPromedioRating()
+    }
+
+    private fun eliminarValoracion() {
+        db.collection("valoraciones")
+            .whereEqualTo("idLugar", idLugar)
+            .whereEqualTo("nombreUsuario", userMail)
+            .get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    document.reference.delete()
+                        .addOnSuccessListener {
+                            Log.i("PedroEsparrago", "Valoración eliminada exitosamente")
+                            userHasRated = false
+                            binding.btnValorar.visibility = View.VISIBLE
+                            binding.btnEliminarValoracion.visibility = View.GONE
+                            binding.rbValoracion.visibility = View.VISIBLE
+                            actualizarPromedioRating()
+                        }
+                        .addOnFailureListener { e ->
+                            Log.w("PedroEsparrago", "Error al eliminar la valoración", e)
+                        }
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.w("PedroEsparrago", "Error al obtener las valoraciones para eliminar", e)
+            }
     }
 
     private fun actualizarPromedioRating() {

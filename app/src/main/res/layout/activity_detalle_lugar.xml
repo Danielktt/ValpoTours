@@ -80,12 +80,23 @@
             app:layout_constraintTop_toBottomOf="@+id/ivDetalleLugar"
             tools:text="Hola mundo" />
 
+        <TextView
+            android:id="@+id/tvCiudad"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:textColor="@color/color_ciudad"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvNombre"
+            tools:text="Ciudad" />
+
         <LinearLayout
             android:id="@+id/lyValoracion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal"
+            android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@+id/tvCiudad">
 
             <ImageView
@@ -97,11 +108,12 @@
 
             <TextView
                 android:id="@+id/tvValoracionPromedio"
-                android:layout_width="10dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="0"
-                android:visibility="visible" /> <!-- Aquí establece la visibilidad a "visible" -->
+                android:visibility="visible" />
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -117,7 +129,6 @@
                 android:paddingRight="10dp"
                 tools:text="2" />
 
-
             <Button
                 android:id="@+id/btnValorar"
                 android:layout_width="wrap_content"
@@ -125,28 +136,31 @@
                 android:layout_marginRight="12dp"
                 android:backgroundTint="@color/celeste"
                 android:text="@string/value" />
+
+            <ImageButton
+                android:id="@+id/btnEliminarValoracion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/deleterating"
+                android:layout_marginRight="12dp"
+                android:visibility="gone"
+                android:text="x"
+                android:background="@android:color/transparent" />
         </LinearLayout>
+
 
 
         <RatingBar
             android:id="@+id/rbValoracion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:numStars="5"
             android:stepSize="1.0"
-            android:visibility="gone" />
+            android:visibility="gone"
+            />
 
 
-
-        <TextView
-            android:id="@+id/tvCiudad"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:textColor="@color/color_ciudad"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvNombre"
-            tools:text="Ciudad" />
         <!-- Descripción -->
         <LinearLayout
             android:id="@+id/llDescription"
