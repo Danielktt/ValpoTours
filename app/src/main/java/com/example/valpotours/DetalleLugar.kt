@@ -171,29 +171,38 @@ class DetalleLugar : AppCompatActivity() {
     }
 
     private fun listenForCommentChanges() {
-        Log.i("PedroEsparrago", "Paso 1")
-        db.collection("comentarios").addSnapshotListener { value, error ->
-            if (error != null) {
-                Log.i("PedroEsparrago", "Paso 2")
-                Log.i("Firestore Error", error.message.toString())
-                return@addSnapshotListener
-            }
-            for (dc: DocumentChange in value?.documentChanges!!) {
-                Log.i("PedroEsparrago", "Paso 3")
-                if (dc.type == DocumentChange.Type.ADDED) {
-                    Log.i("PedroEsparrago", "Paso 4")
-                    val comentario = dc.document.toObject(Comentario::class.java)
-                    if(dc.document.data["idLugar"] == idLugar) {
-                        comentarioList.add(comentario)
-                        Log.i("PedroEsparrago", "Paso 5")
+        db.collection("comentarios")
+            .whereEqualTo("idLugar", idLugar)
+            .addSnapshotListener { value, error ->
+                if (error != null) {
+                    Log.i("PedroEsparrago", "Error: ${error.message}")
+                    return@addSnapshotListener
+                }
 
-                        Log.i("PedroEsparrago", "Cantidad de Comentario: ${comentarioList}")
+                comentarioList.clear()
+                var userComment: Comentario? = null
+
+                for (dc in value?.documentChanges!!) {
+                    if (dc.type == DocumentChange.Type.ADDED) {
+                        val comentario = dc.document.toObject(Comentario::class.java)
+                        if (dc.document.data["idLugar"] == idLugar) {
+                            if (comentario.nombreUsuario == userMail) {
+                                userComment = comentario
+                            } else {
+                                comentarioList.add(comentario)
+                            }
+                        }
                     }
                 }
+
+                userComment?.let {
+                    comentarioList.add(0, it) // Agregar el comentario del usuario al inicio de la lista
+                }
+
+                binding.recyclerViewComentarios.adapter?.notifyDataSetChanged()
             }
-            binding.recyclerViewComentarios.adapter?.notifyDataSetChanged()
-        }
     }
+
 
     private fun verificarValoracionUsuario() {
         // Verificar si el usuario ya ha valorado este lugar
