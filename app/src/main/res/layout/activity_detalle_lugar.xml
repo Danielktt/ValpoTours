@@ -72,6 +72,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
@@ -90,22 +92,31 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
+                android:paddingRight="10dp"
                 android:src="@drawable/ic_rating" />
 
             <TextView
-                android:id="@+id/tvRating"
+                android:id="@+id/tvValoracionPromedio"
                 android:layout_width="10dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="TextView" />
+                android:text="0"
+                android:visibility="visible" /> <!-- Aquí establece la visibilidad a "visible" -->
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:paddingRight="10dp"
+                android:src="@drawable/baseline_message_24" />
 
             <TextView
                 android:id="@+id/textViewCommentCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:padding="10dp"
-                tools:text="4.8" />
+                android:paddingRight="10dp"
+                tools:text="2" />
+
 
             <Button
                 android:id="@+id/btnValorar"
@@ -115,6 +126,17 @@
                 android:backgroundTint="@color/celeste"
                 android:text="@string/value" />
         </LinearLayout>
+
+
+        <RatingBar
+            android:id="@+id/rbValoracion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numStars="5"
+            android:stepSize="1.0"
+            android:visibility="gone" />
+
+
 
         <TextView
             android:id="@+id/tvCiudad"

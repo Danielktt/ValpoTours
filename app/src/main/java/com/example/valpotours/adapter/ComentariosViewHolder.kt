@@ -7,18 +7,26 @@ import com.example.valpotours.Comentario
 import com.example.valpotours.R
 import com.example.valpotours.databinding.ItemCategoriaBinding
 import com.example.valpotours.databinding.ItemComentarioBinding
+import java.text.SimpleDateFormat
+import java.util.*
 
 class ComentariosViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-    //private val comentarioTextView: TextView = view.findViewById(R.id.etComentario)
-    //private val nombreTextView: TextView = view.findViewById(R.id.tvNombreUsuario)
-    //private val timestampTextView: TextView = view.findViewById(R.id.tvTimestamp)
-
     val binding = ItemComentarioBinding.bind(view)
+    fun render(comentarioModel: Comentario, rating: Double) {
+        binding.tvComentario.text = comentarioModel.comentario
+        binding.tvNombreUsuario.text = comentarioModel.nombreUsuario
+        binding.txtValoracion.text = if (rating == 0.0) "Sin valorar" else rating.toString()
 
-    fun render(comentarioModel: Comentario) {
-            binding.tvComentario.text = comentarioModel.comentario
-            binding.tvNombreUsuario.text = comentarioModel.nombreUsuario
-            binding.tvTimestamp.text = comentarioModel.timestamp.toString()
+        val timestampText = comentarioModel.timestamp?.let { timestamp ->
+            // Convertir el timestamp a una fecha legible
+            val date = Date(timestamp.seconds * 1000)
+            val dateFormat = SimpleDateFormat("dd 'de' MMMM 'de' yyyy", Locale.getDefault())
+            dateFormat.format(date)
+        } ?: "No disponible"
+        binding.tvTimestamp.text = timestampText
     }
+
+
+
 }

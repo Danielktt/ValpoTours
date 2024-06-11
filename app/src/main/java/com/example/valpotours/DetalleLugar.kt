@@ -1,9 +1,10 @@
-
 package com.example.valpotours
+
 
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -27,6 +28,8 @@ class DetalleLugar : AppCompatActivity() {
     private lateinit var idLugar: String
     private lateinit var comentarioList: ArrayList<Comentario>
     private lateinit var comentarioAdapter: ComentarioAdapter
+    private var userHasRated = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -43,6 +46,7 @@ class DetalleLugar : AppCompatActivity() {
         binding.btnBack.setOnClickListener { onBackPressed() }
         binding.btnFavorito.setOnClickListener { editarListaFavoritos(idLugar) }
         binding.btnPublicarComentario.setOnClickListener { publicarComentario() }
+        binding.btnValorar.setOnClickListener { valorarLugar() }
     }
 
     private fun initDetail(id_place: String) {
@@ -67,7 +71,10 @@ class DetalleLugar : AppCompatActivity() {
                         }
                     }
                 }
+
+                actualizarPromedioRating() // Movimos la llamada aquí
                 actualizarContadorComentarios()
+                verificarValoracionUsuario()
 
                 binding.recyclerViewComentarios.layoutManager = LinearLayoutManager(this)
                 binding.recyclerViewComentarios.setHasFixedSize(true)
@@ -75,8 +82,10 @@ class DetalleLugar : AppCompatActivity() {
                 binding.recyclerViewComentarios.adapter = ComentarioAdapter(comentarioList)
                 listenForCommentChanges()
             }
+            .addOnFailureListener { e ->
+                Log.w("PedroEsparrago", "Error al cargar los detalles del lugar", e)
+            }
     }
-
 
 
     private fun editarListaFavoritos(idLugar: String) {
@@ -159,31 +168,102 @@ class DetalleLugar : AppCompatActivity() {
             }
     }
 
-
     private fun listenForCommentChanges() {
         Log.i("PedroEsparrago", "Paso 1")
-            db.collection("comentarios").addSnapshotListener { value, error ->
-                if (error != null) {
-                    Log.i("PedroEsparrago", "Paso 2")
-                    Log.i("Firestore Error", error.message.toString())
-                    return@addSnapshotListener
-                }
-                for (dc: DocumentChange in value?.documentChanges!!) {
-                    Log.i("PedroEsparrago", "Paso 3")
-                    if (dc.type == DocumentChange.Type.ADDED) {
-                        Log.i("PedroEsparrago", "Paso 4")
-                        val comentario = dc.document.toObject(Comentario::class.java)
-                        if(dc.document.data["idLugar"] == idLugar) {
-                            comentarioList.add(comentario)
-                            Log.i("PedroEsparrago", "Paso 5")
+        db.collection("comentarios").addSnapshotListener { value, error ->
+            if (error != null) {
+                Log.i("PedroEsparrago", "Paso 2")
+                Log.i("Firestore Error", error.message.toString())
+                return@addSnapshotListener
+            }
+            for (dc: DocumentChange in value?.documentChanges!!) {
+                Log.i("PedroEsparrago", "Paso 3")
+                if (dc.type == DocumentChange.Type.ADDED) {
+                    Log.i("PedroEsparrago", "Paso 4")
+                    val comentario = dc.document.toObject(Comentario::class.java)
+                    if(dc.document.data["idLugar"] == idLugar) {
+                        comentarioList.add(comentario)
+                        Log.i("PedroEsparrago", "Paso 5")
 
-                            Log.i("PedroEsparrago", "Cantidad de Comentario: ${comentarioList}")
-                        }
+                        Log.i("PedroEsparrago", "Cantidad de Comentario: ${comentarioList}")
                     }
                 }
-               binding.recyclerViewComentarios.adapter?.notifyDataSetChanged()
             }
+            binding.recyclerViewComentarios.adapter?.notifyDataSetChanged()
         }
+    }
+
+    private fun verificarValoracionUsuario() {
+        // Verificar si el usuario ya ha valorado este lugar
+        db.collection("valoraciones")
+            .whereEqualTo("idLugar", idLugar)
+            .whereEqualTo("nombreUsuario", userMail)
+            .get()
+            .addOnSuccessListener { documents ->
+                if (documents.isEmpty) {
+                    userHasRated = false
+                    actualizarPromedioRating()
+                    binding.rbValoracion.visibility = View.VISIBLE
+                    binding.tvValoracionPromedio.visibility = View.VISIBLE
+                } else {
+                    userHasRated = true
+                    val rating = documents.first().get("rating") as? Double ?: 0.0
+                    binding.rbValoracion.rating = rating.toFloat()
+                    binding.rbValoracion.visibility = View.GONE
+                    binding.tvValoracionPromedio.visibility = View.VISIBLE // Cambiado a VISIBLE
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.w("PedroEsparrago", "Error al verificar la valoración del usuario", e)
+            }
+    }
+
+    private fun valorarLugar() {
+        if (!userHasRated) {
+            val rating = binding.rbValoracion.rating
+            val ratingData = hashMapOf(
+                "rating" to rating,
+                "nombreUsuario" to userMail,
+                "idLugar" to idLugar,
+                "timestamp" to FieldValue.serverTimestamp()
+            )
+            db.collection("valoraciones").add(ratingData)
+                .addOnSuccessListener {
+                    Log.i("PedroEsparrago", "Valoración guardada exitosamente")
+                    userHasRated = true
+                    binding.btnValorar.text = "Valorado"
+                    binding.rbValoracion.visibility = View.GONE
+                    actualizarPromedioRating()
+                }
+                .addOnFailureListener { e ->
+                    Log.w("PedroEsparrago", "Error al guardar la valoración", e)
+                }
+        } else {
+            binding.rbValoracion.visibility = View.GONE
+            binding.tvValoracionPromedio.visibility = View.VISIBLE
+        }
+        actualizarPromedioRating()
+    }
+
+    private fun actualizarPromedioRating() {
+        if (userHasRated) {
+            binding.btnValorar.text = "Valorado"
+        }
+
+        db.collection("valoraciones")
+            .whereEqualTo("idLugar", idLugar)
+            .get()
+            .addOnSuccessListener { documents ->
+                val totalRating = documents.sumOf { it.getDouble("rating") ?: 0.0 }
+                val averageRating = totalRating / documents.size()
+                binding.tvValoracionPromedio.text = "${String.format("%.1f", averageRating)}"
+            }
+            .addOnFailureListener { e ->
+                Log.w("PedroEsparrago", "Error al calcular la valoración promedio", e)
+            }
+
+
+    }
 
     private fun navigateToMap() {
         val intent = Intent(this, MapActivity::class.java)
