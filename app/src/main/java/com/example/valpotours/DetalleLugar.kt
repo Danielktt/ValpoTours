@@ -2,9 +2,11 @@ package com.example.valpotours
 
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -23,6 +25,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
 
 class DetalleLugar : AppCompatActivity() {
+    private var urlMapa: String = ""
 
     private lateinit var binding: ActivityDetalleLugarBinding
     private lateinit var db: FirebaseFirestore
@@ -49,6 +52,17 @@ class DetalleLugar : AppCompatActivity() {
         binding.btnPublicarComentario.setOnClickListener { publicarComentario() }
         binding.btnValorar.setOnClickListener { valorarLugar() }
         binding.btnEliminarValoracion.setOnClickListener { eliminarValoracion() } // Listener agregado aquí
+        binding.btnComoLLegar.setOnClickListener{
+            if(urlMapa.isNotEmpty()){
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(urlMapa))
+                startActivity(intent)
+
+            }else{
+                Toast.makeText(this, "URL del mapa no disponible", Toast.LENGTH_SHORT).show()
+
+            }
+        }
+
     }
 
     private fun initDetail(id_place: String) {
@@ -64,9 +78,8 @@ class DetalleLugar : AppCompatActivity() {
                         binding.tvNombre.text = document.data["nombre"].toString()
                         binding.tvCiudad.text = document.data["localidad"].toString()
                         binding.tvDescription.text = document.data["descripcion"].toString()
-                        binding.btnComoLLegar.setOnClickListener {
-                            navigateToMap()
-                        }
+
+                        urlMapa = document.data["urlmaps"].toString()
                         idLugar = document.id
                     }
                 }
@@ -104,6 +117,10 @@ class DetalleLugar : AppCompatActivity() {
                 Log.w("PedroEsparrago", "Error al agregar el valor al array", e)
             }
         }
+    }
+    private fun navigateToMap(url: String) {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        startActivity(intent)
     }
 
     private fun publicarComentario() {
