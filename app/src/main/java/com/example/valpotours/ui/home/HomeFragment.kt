@@ -1,5 +1,6 @@
 package com.example.valpotours.ui.home
 
+import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -12,11 +13,16 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.valpotours.Categorias
 import com.example.valpotours.LugaresTuristico
+import com.example.valpotours.LocationService
 import com.example.valpotours.adapter.CategoriasAdapter
 import com.example.valpotours.adapter.LugarTuristicoAdapter
 import com.example.valpotours.databinding.FragmentHomeBinding
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class HomeFragment : Fragment() {
 
@@ -26,8 +32,8 @@ class HomeFragment : Fragment() {
     private lateinit var categoriasArrayList: ArrayList<Categorias>
     private lateinit var lugaresArrayList: ArrayList<LugaresTuristico>
     private lateinit var lugarTuristicoAdapter: LugarTuristicoAdapter
-    private lateinit var originalLugaresArrayList: ArrayList<LugaresTuristico> // Mantén una copia de la lista original
-    private var selectedCategory: Categorias? = null // Variable para mantener la categoría seleccionada
+    private lateinit var originalLugaresArrayList: ArrayList<LugaresTuristico>
+    private var selectedCategory: Categorias? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,6 +62,7 @@ class HomeFragment : Fragment() {
         })
 
         initRecycleView()
+        obtenerYOrdenarLugaresPorCercania() // Obtén y ordena los lugares por cercanía
         return root
     }
 
@@ -69,14 +76,13 @@ class HomeFragment : Fragment() {
                 matchesNombre || matchesCategoria
             }
         } else {
-            originalLugaresArrayList // Restaura la lista original si la consulta está vacía
+            originalLugaresArrayList
         }
         lugarTuristicoAdapter.updateList(ArrayList(filteredList))
         Log.d("HomeFragment", "Filtered list size: ${filteredList.size}")
     }
 
     private fun initRecycleView() {
-        // INIT CATEGORIA
         binding.rvCategories.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.rvCategories.setHasFixedSize(true)
         categoriasArrayList = arrayListOf()
@@ -85,11 +91,10 @@ class HomeFragment : Fragment() {
         }
         listenForCategoryChanges()
 
-        // INIT PLACES
         binding.recycleLugares.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.recycleLugares.setHasFixedSize(true)
         lugaresArrayList = arrayListOf()
-        originalLugaresArrayList = arrayListOf() // Inicializa la lista original
+        originalLugaresArrayList = arrayListOf()
         lugarTuristicoAdapter = LugarTuristicoAdapter(lugaresArrayList)
         binding.recycleLugares.adapter = lugarTuristicoAdapter
         listenForPlaceChanges()
@@ -98,15 +103,13 @@ class HomeFragment : Fragment() {
     private fun filterPlacesByCategory(category: Categorias) {
         val filteredList: List<LugaresTuristico>
         if (category == selectedCategory) {
-            // Si la categoría seleccionada es la misma, restaura la lista original
             filteredList = originalLugaresArrayList
-            selectedCategory = null // Restablece la categoría seleccionada
+            selectedCategory = null
         } else {
-            // Si se selecciona una nueva categoría, filtra la lista
             filteredList = lugaresArrayList.filter { lugar ->
                 category.categoria?.let { lugar.categoria?.contains(it, ignoreCase = true) } == true
             }
-            selectedCategory = category // Actualiza la categoría seleccionada
+            selectedCategory = category
         }
         lugarTuristicoAdapter.updateList(ArrayList(filteredList))
         Log.d("FavoriteFragment", "Filtered list size by category: ${filteredList.size}")
@@ -137,10 +140,34 @@ class HomeFragment : Fragment() {
                 if (dc.type == DocumentChange.Type.ADDED) {
                     val lugar = dc.document.toObject(LugaresTuristico::class.java)
                     lugaresArrayList.add(lugar)
-                    originalLugaresArrayList.add(lugar) // También agrega a la lista original
+                    originalLugaresArrayList.add(lugar)
                 }
             }
             lugarTuristicoAdapter.updateList(lugaresArrayList)
+        }
+    }
+
+    private fun obtenerYOrdenarLugaresPorCercania() {
+        CoroutineScope(Dispatchers.Main).launch {
+            val locationService = LocationService()
+            val userLocation = withContext(Dispatchers.IO) {
+                locationService.getUserLocation(requireContext())
+            }
+
+            if (userLocation != null) {
+                Log.i("HomeFragment", "User location obtained: ${userLocation.latitude}, ${userLocation.longitude}")
+                lugaresArrayList.sortBy { lugar ->
+                    val lugarLocation = Location("").apply {
+                        latitude = lugar.latitud?.toDoubleOrNull() ?: 0.0
+                        longitude = lugar.longitud?.toDoubleOrNull() ?: 0.0
+                    }
+                    userLocation.distanceTo(lugarLocation)
+                }
+                lugarTuristicoAdapter.updateList(lugaresArrayList)
+                Log.i("HomeFragment", "Lugares ordenados por cercanía: ${lugaresArrayList.joinToString { it.nombre.toString() }}")
+            } else {
+                Log.e("HomeFragment", "User location is null")
+            }
         }
     }
 

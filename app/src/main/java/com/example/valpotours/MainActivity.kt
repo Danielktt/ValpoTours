@@ -1,10 +1,15 @@
 package com.example.valpotours
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.NavController
@@ -20,10 +25,12 @@ class MainActivity : AppCompatActivity() {
     companion object{
         var listaFav:ArrayList<String> = arrayListOf()
         lateinit var idUser: String
+        const val REQUEST_CODE_LOCATION = 0
+
     }
 
 
-
+    private val LocationService : LocationService = LocationService()
     private lateinit var navController: NavController
     private lateinit var db : FirebaseFirestore
     private lateinit var binding: ActivityMainBinding
@@ -37,7 +44,7 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
+        enableMyLocation()
         llenarListaFav()
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
@@ -45,8 +52,56 @@ class MainActivity : AppCompatActivity() {
 
         val  bottonnav = findViewById<BottomNavigationView>(R.id.nav_view)
         bottonnav.setupWithNavController(navController)
+
     }
 
+
+    // PERMISOS DE LOCACION
+    private fun isPermissionsGranted() = ContextCompat.checkSelfPermission(
+        this,
+        Manifest.permission.ACCESS_FINE_LOCATION
+    ) == PackageManager.PERMISSION_GRANTED
+    private fun enableMyLocation() {
+        if (isPermissionsGranted()) {
+            return
+        } else {
+            requestLocationPermission()
+        }
+    }
+
+    private fun requestLocationPermission() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)) {
+            Toast.makeText(this, "Ve a ajustes y acepta los permisos", Toast.LENGTH_SHORT).show()
+        } else {
+            ActivityCompat.requestPermissions(this,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                REQUEST_CODE_LOCATION)
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when(requestCode){
+            REQUEST_CODE_LOCATION -> if(grantResults.isNotEmpty() && grantResults[0]==PackageManager.PERMISSION_GRANTED){
+
+            }else{
+                Toast.makeText(this, "Para activar la localización ve a ajustes y acepta los permisos", Toast.LENGTH_SHORT).show()
+            }
+            else -> {}
+        }
+    }
+    override fun onResumeFragments() {
+        super.onResumeFragments()
+        if(!isPermissionsGranted()){
+            Toast.makeText(this, "Para activar la localización ve a ajustes y acepta los permisos", Toast.LENGTH_SHORT).show()
+        }
+    }
+    //OTRAS FUNCIONES
     private fun llenarListaFav() {
         db = FirebaseFirestore.getInstance()
         Log.i("PedroEsparrago","Hola")
