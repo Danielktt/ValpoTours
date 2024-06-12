@@ -16,6 +16,7 @@ import com.example.valpotours.MainActivity.Companion.listaFav
 import com.example.valpotours.adapter.ComentarioAdapter
 import com.example.valpotours.adapter.LugarTuristicoViewHolder.Companion.ID_KEY
 import com.example.valpotours.databinding.ActivityDetalleLugarBinding
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -48,7 +49,6 @@ class DetalleLugar : AppCompatActivity() {
         binding.btnPublicarComentario.setOnClickListener { publicarComentario() }
         binding.btnValorar.setOnClickListener { valorarLugar() }
         binding.btnEliminarValoracion.setOnClickListener { eliminarValoracion() } // Listener agregado aquí
-
     }
 
     private fun initDetail(id_place: String) {
@@ -68,9 +68,6 @@ class DetalleLugar : AppCompatActivity() {
                             navigateToMap()
                         }
                         idLugar = document.id
-                        if (document.id in listaFav) {
-                            binding.btnFavorito.setImageResource(R.drawable.ic_favorite_true)
-                        }
                     }
                 }
 
@@ -81,14 +78,16 @@ class DetalleLugar : AppCompatActivity() {
                 binding.recyclerViewComentarios.layoutManager = LinearLayoutManager(this)
                 binding.recyclerViewComentarios.setHasFixedSize(true)
                 comentarioList = arrayListOf()
-                binding.recyclerViewComentarios.adapter = ComentarioAdapter(comentarioList)
+                comentarioAdapter = ComentarioAdapter(comentarioList)
+                binding.recyclerViewComentarios.adapter = comentarioAdapter
+
+
                 listenForCommentChanges()
             }
             .addOnFailureListener { e ->
                 Log.w("PedroEsparrago", "Error al cargar los detalles del lugar", e)
             }
     }
-
 
     private fun editarListaFavoritos(idLugar: String) {
         db = FirebaseFirestore.getInstance()
@@ -148,8 +147,6 @@ class DetalleLugar : AppCompatActivity() {
                         binding.btnPublicarComentario.isEnabled = true
                         binding.btnPublicarComentario.text = "Publicar Comentario"
                     }
-
-
                     Log.w("PedroEsparrago", "El usuario ya ha comentado en este lugar.")
                 }
             }
@@ -172,6 +169,7 @@ class DetalleLugar : AppCompatActivity() {
 
     private fun listenForCommentChanges() {
         Log.i("PedroEsparrago", "Paso 1")
+        val currentUser = FirebaseAuth.getInstance().currentUser?.email
         db.collection("comentarios").addSnapshotListener { value, error ->
             if (error != null) {
                 Log.i("PedroEsparrago", "Paso 2")
@@ -184,16 +182,21 @@ class DetalleLugar : AppCompatActivity() {
                     Log.i("PedroEsparrago", "Paso 4")
                     val comentario = dc.document.toObject(Comentario::class.java)
                     if(dc.document.data["idLugar"] == idLugar) {
-                        comentarioList.add(comentario)
-                        Log.i("PedroEsparrago", "Paso 5")
-
-                        Log.i("PedroEsparrago", "Cantidad de Comentario: ${comentarioList}")
+                        // Verifica si el comentario es del usuario autenticado
+                        if (comentario.nombreUsuario == currentUser) {
+                            // Agrega el comentario al principio de la lista
+                            comentarioList.add(0, comentario)
+                        } else {
+                            comentarioList.add(comentario)
+                        }
+                        Log.i("PedroEsparrago", " $currentUser: ${comentarioList}")
                     }
                 }
             }
             binding.recyclerViewComentarios.adapter?.notifyDataSetChanged()
         }
     }
+
 
     private fun verificarValoracionUsuario() {
         // Verificar si el usuario ya ha valorado este lugar
@@ -218,7 +221,6 @@ class DetalleLugar : AppCompatActivity() {
                 }
             }
             .addOnFailureListener { e ->
-                Log.w("PedroEsparrago", "Error al verificar la valoración del usuario", e)
             }
     }
 
@@ -234,7 +236,6 @@ class DetalleLugar : AppCompatActivity() {
             )
             db.collection("valoraciones").add(ratingData)
                 .addOnSuccessListener {
-                    Log.i("PedroEsparrago", "Valoración guardada exitosamente")
                     userHasRated = true
                     binding.btnValorar.visibility = View.GONE
                     binding.btnEliminarValoracion.visibility = View.VISIBLE
@@ -242,7 +243,6 @@ class DetalleLugar : AppCompatActivity() {
                     actualizarPromedioRating()
                 }
                 .addOnFailureListener { e ->
-                    Log.w("PedroEsparrago", "Error al guardar la valoración", e)
                 }
         } else {
             binding.rbValoracion.visibility = View.GONE
@@ -260,7 +260,6 @@ class DetalleLugar : AppCompatActivity() {
                 for (document in documents) {
                     document.reference.delete()
                         .addOnSuccessListener {
-                            Log.i("PedroEsparrago", "Valoración eliminada exitosamente")
                             userHasRated = false
                             binding.btnValorar.visibility = View.VISIBLE
                             binding.btnEliminarValoracion.visibility = View.GONE
@@ -268,12 +267,10 @@ class DetalleLugar : AppCompatActivity() {
                             actualizarPromedioRating()
                         }
                         .addOnFailureListener { e ->
-                            Log.w("PedroEsparrago", "Error al eliminar la valoración", e)
                         }
                 }
             }
             .addOnFailureListener { e ->
-                Log.w("PedroEsparrago", "Error al obtener las valoraciones para eliminar", e)
             }
     }
 

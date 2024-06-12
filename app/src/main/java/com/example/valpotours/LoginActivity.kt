@@ -93,7 +93,14 @@ class LoginActivity : AppCompatActivity() {
             loginUser()
         }
     }
-
+    override fun onStart() {
+        super.onStart()
+        val currentUser = mAuth.currentUser
+        if (currentUser != null && currentUser.isEmailVerified) {
+            userMail = currentUser.email ?: ""
+            goHome(userMail)
+        }
+    }
     private fun loginUser() {
         email = etEmail.text.toString()
         password = etPassword.text.toString()

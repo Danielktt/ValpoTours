@@ -72,18 +72,19 @@ class ComentarioAdapter(private val comentarioList: ArrayList<Comentario>) : Rec
                                 notifyDataSetChanged()
                             }
                             .addOnFailureListener { e ->
-                                Log.e("ComentarioAdapter", "Error al eliminar comentario", e)
                             }
                     }
                 }
                 .addOnFailureListener { e ->
-                    Log.e("ComentarioAdapter", "Error al obtener comentarios", e)
+                    listenForCommentChanges()
                 }
         } else {
-            Log.e("ComentarioAdapter", "Nombre de usuario o ID de lugar nulo")
         }
     }
 
+    private fun listenForCommentChanges() {
+        notifyDataSetChanged()
+    }
 
 
     interface OnCommentDeleteListener {
