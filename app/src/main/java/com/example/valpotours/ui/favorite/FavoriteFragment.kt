@@ -127,7 +127,6 @@ class FavoriteFragment : Fragment() {
             .addOnSuccessListener { documents ->
                 for (document in documents) {
                     binding.tvUserName.text = document.data["nombre"].toString()
-                    binding.tvUseEmail.text = document.data["email"].toString()
                 }
             }
             .addOnFailureListener { exception ->

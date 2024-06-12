@@ -61,6 +61,10 @@ class HomeFragment : Fragment() {
             }
         })
 
+        binding.btnSortByProximity.setOnClickListener {
+            obtenerYOrdenarLugaresPorCercania()
+        }
+
         initRecycleView()
         return root
     }
@@ -143,7 +147,6 @@ class HomeFragment : Fragment() {
                 }
             }
             lugarTuristicoAdapter.updateList(lugaresArrayList)
-            obtenerYOrdenarLugaresPorCercania() // Llamada aquí para actualizar la lista según la ubicación del usuario
         }
     }
 
