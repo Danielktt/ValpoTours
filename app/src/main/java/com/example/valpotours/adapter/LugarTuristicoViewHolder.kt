@@ -66,22 +66,14 @@ class LugarTuristicoViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     }
 
     private suspend fun actualizarPromedioRating(id: String): Double {
-        Log.i("PedroEsparrago", "3")
         var rating = 0.3
-        Log.i("PedroEsparrago", "4")
         try {
             val documents = db.collection("valoraciones")
                 .whereEqualTo("idLugar", id)
                 .get()
                 .await()
-            Log.i("PedroEsparrago", "5")
-            Log.i("PedroEsparrago", "")
             val totalRating = documents.sumOf { it.getDouble("rating") ?: 0.0 }
-            Log.i("PedroEsparrago", "6")
-            Log.i("PedroEsparrago", "totalRating ${totalRating}")
             rating = totalRating / documents.size()
-            Log.i("PedroEsparrago", "7")
-            Log.i("PedroEsparrago", "rating ${rating}")
 
         } catch (e: Exception) {
             Log.w("PedroEsparrago", "Error al calcular la valoración promedio", e)
@@ -89,5 +81,3 @@ class LugarTuristicoViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         return rating
     }
 }
-
-//XFQ3+W2 Viña del Mar

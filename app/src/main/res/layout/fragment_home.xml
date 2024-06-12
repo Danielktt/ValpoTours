@@ -18,7 +18,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="150dp"
-        android:src="@drawable/homefoto"
+        android:src="@drawable/thunder"
         android:layout_gravity="center_horizontal"
     />
 
