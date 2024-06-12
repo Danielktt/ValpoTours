@@ -2,9 +2,11 @@ package com.example.valpotours
 
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -16,12 +18,14 @@ import com.example.valpotours.MainActivity.Companion.listaFav
 import com.example.valpotours.adapter.ComentarioAdapter
 import com.example.valpotours.adapter.LugarTuristicoViewHolder.Companion.ID_KEY
 import com.example.valpotours.databinding.ActivityDetalleLugarBinding
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
 
 class DetalleLugar : AppCompatActivity() {
+    private var urlMapa: String = ""
 
     private lateinit var binding: ActivityDetalleLugarBinding
     private lateinit var db: FirebaseFirestore
@@ -48,6 +52,16 @@ class DetalleLugar : AppCompatActivity() {
         binding.btnPublicarComentario.setOnClickListener { publicarComentario() }
         binding.btnValorar.setOnClickListener { valorarLugar() }
         binding.btnEliminarValoracion.setOnClickListener { eliminarValoracion() } // Listener agregado aquí
+        binding.btnComoLLegar.setOnClickListener{
+            if(urlMapa.isNotEmpty()){
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(urlMapa))
+                startActivity(intent)
+
+            }else{
+                Toast.makeText(this, "URL del mapa no disponible", Toast.LENGTH_SHORT).show()
+
+            }
+        }
 
     }
 
@@ -64,13 +78,9 @@ class DetalleLugar : AppCompatActivity() {
                         binding.tvNombre.text = document.data["nombre"].toString()
                         binding.tvCiudad.text = document.data["localidad"].toString()
                         binding.tvDescription.text = document.data["descripcion"].toString()
-                        binding.btnComoLLegar.setOnClickListener {
-                            navigateToMap()
-                        }
+
+                        urlMapa = document.data["urlmaps"].toString()
                         idLugar = document.id
-                        if (document.id in listaFav) {
-                            binding.btnFavorito.setImageResource(R.drawable.ic_favorite_true)
-                        }
                     }
                 }
 
@@ -81,14 +91,16 @@ class DetalleLugar : AppCompatActivity() {
                 binding.recyclerViewComentarios.layoutManager = LinearLayoutManager(this)
                 binding.recyclerViewComentarios.setHasFixedSize(true)
                 comentarioList = arrayListOf()
-                binding.recyclerViewComentarios.adapter = ComentarioAdapter(comentarioList)
+                comentarioAdapter = ComentarioAdapter(comentarioList)
+                binding.recyclerViewComentarios.adapter = comentarioAdapter
+
+
                 listenForCommentChanges()
             }
             .addOnFailureListener { e ->
                 Log.w("PedroEsparrago", "Error al cargar los detalles del lugar", e)
             }
     }
-
 
     private fun editarListaFavoritos(idLugar: String) {
         db = FirebaseFirestore.getInstance()
@@ -105,6 +117,10 @@ class DetalleLugar : AppCompatActivity() {
                 Log.w("PedroEsparrago", "Error al agregar el valor al array", e)
             }
         }
+    }
+    private fun navigateToMap(url: String) {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        startActivity(intent)
     }
 
     private fun publicarComentario() {
@@ -148,8 +164,6 @@ class DetalleLugar : AppCompatActivity() {
                         binding.btnPublicarComentario.isEnabled = true
                         binding.btnPublicarComentario.text = "Publicar Comentario"
                     }
-
-
                     Log.w("PedroEsparrago", "El usuario ya ha comentado en este lugar.")
                 }
             }
@@ -171,36 +185,33 @@ class DetalleLugar : AppCompatActivity() {
     }
 
     private fun listenForCommentChanges() {
-        db.collection("comentarios")
-            .whereEqualTo("idLugar", idLugar)
-            .addSnapshotListener { value, error ->
-                if (error != null) {
-                    Log.i("PedroEsparrago", "Error: ${error.message}")
-                    return@addSnapshotListener
-                }
-
-                comentarioList.clear()
-                var userComment: Comentario? = null
-
-                for (dc in value?.documentChanges!!) {
-                    if (dc.type == DocumentChange.Type.ADDED) {
-                        val comentario = dc.document.toObject(Comentario::class.java)
-                        if (dc.document.data["idLugar"] == idLugar) {
-                            if (comentario.nombreUsuario == userMail) {
-                                userComment = comentario
-                            } else {
-                                comentarioList.add(comentario)
-                            }
+        Log.i("PedroEsparrago", "Paso 1")
+        val currentUser = FirebaseAuth.getInstance().currentUser?.email
+        db.collection("comentarios").addSnapshotListener { value, error ->
+            if (error != null) {
+                Log.i("PedroEsparrago", "Paso 2")
+                Log.i("Firestore Error", error.message.toString())
+                return@addSnapshotListener
+            }
+            for (dc: DocumentChange in value?.documentChanges!!) {
+                Log.i("PedroEsparrago", "Paso 3")
+                if (dc.type == DocumentChange.Type.ADDED) {
+                    Log.i("PedroEsparrago", "Paso 4")
+                    val comentario = dc.document.toObject(Comentario::class.java)
+                    if(dc.document.data["idLugar"] == idLugar) {
+                        // Verifica si el comentario es del usuario autenticado
+                        if (comentario.nombreUsuario == currentUser) {
+                            // Agrega el comentario al principio de la lista
+                            comentarioList.add(0, comentario)
+                        } else {
+                            comentarioList.add(comentario)
                         }
+                        Log.i("PedroEsparrago", " $currentUser: ${comentarioList}")
                     }
                 }
-
-                userComment?.let {
-                    comentarioList.add(0, it) // Agregar el comentario del usuario al inicio de la lista
-                }
-
-                binding.recyclerViewComentarios.adapter?.notifyDataSetChanged()
             }
+            binding.recyclerViewComentarios.adapter?.notifyDataSetChanged()
+        }
     }
 
 
@@ -227,7 +238,6 @@ class DetalleLugar : AppCompatActivity() {
                 }
             }
             .addOnFailureListener { e ->
-                Log.w("PedroEsparrago", "Error al verificar la valoración del usuario", e)
             }
     }
 
@@ -243,7 +253,6 @@ class DetalleLugar : AppCompatActivity() {
             )
             db.collection("valoraciones").add(ratingData)
                 .addOnSuccessListener {
-                    Log.i("PedroEsparrago", "Valoración guardada exitosamente")
                     userHasRated = true
                     binding.btnValorar.visibility = View.GONE
                     binding.btnEliminarValoracion.visibility = View.VISIBLE
@@ -251,7 +260,6 @@ class DetalleLugar : AppCompatActivity() {
                     actualizarPromedioRating()
                 }
                 .addOnFailureListener { e ->
-                    Log.w("PedroEsparrago", "Error al guardar la valoración", e)
                 }
         } else {
             binding.rbValoracion.visibility = View.GONE
@@ -269,7 +277,6 @@ class DetalleLugar : AppCompatActivity() {
                 for (document in documents) {
                     document.reference.delete()
                         .addOnSuccessListener {
-                            Log.i("PedroEsparrago", "Valoración eliminada exitosamente")
                             userHasRated = false
                             binding.btnValorar.visibility = View.VISIBLE
                             binding.btnEliminarValoracion.visibility = View.GONE
@@ -277,12 +284,10 @@ class DetalleLugar : AppCompatActivity() {
                             actualizarPromedioRating()
                         }
                         .addOnFailureListener { e ->
-                            Log.w("PedroEsparrago", "Error al eliminar la valoración", e)
                         }
                 }
             }
             .addOnFailureListener { e ->
-                Log.w("PedroEsparrago", "Error al obtener las valoraciones para eliminar", e)
             }
     }
 
