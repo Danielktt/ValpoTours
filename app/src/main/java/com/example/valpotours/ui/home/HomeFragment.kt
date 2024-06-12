@@ -62,7 +62,6 @@ class HomeFragment : Fragment() {
         })
 
         initRecycleView()
-        obtenerYOrdenarLugaresPorCercania() // Obtén y ordena los lugares por cercanía
         return root
     }
 
@@ -144,6 +143,7 @@ class HomeFragment : Fragment() {
                 }
             }
             lugarTuristicoAdapter.updateList(lugaresArrayList)
+            obtenerYOrdenarLugaresPorCercania() // Llamada aquí para actualizar la lista según la ubicación del usuario
         }
     }
 
@@ -164,9 +164,7 @@ class HomeFragment : Fragment() {
                     userLocation.distanceTo(lugarLocation)
                 }
                 lugarTuristicoAdapter.updateList(lugaresArrayList)
-                Log.i("HomeFragment", "Lugares ordenados por cercanía: ${lugaresArrayList.joinToString { it.nombre.toString() }}")
-            } else {
-                Log.e("HomeFragment", "User location is null")
+                Log.i("HomeFragment", "Lugares ordenados por cercanía: $lugaresArrayList")
             }
         }
     }
