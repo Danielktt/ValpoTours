@@ -118,6 +118,12 @@ class ChangeDatoActivity : AppCompatActivity() {
             }
             binding.progressBar.isVisible = true
             Toast.makeText(this, R.string.data_updated_successfully, Toast.LENGTH_SHORT).show()
+            goHome()
         }
+    }
+
+    private fun goHome() {
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
     }
 }

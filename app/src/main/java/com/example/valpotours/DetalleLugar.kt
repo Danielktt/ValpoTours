@@ -49,14 +49,12 @@ class DetalleLugar : AppCompatActivity() {
         binding.btnPublicarComentario.setOnClickListener { publicarComentario() }
         binding.btnValorar.setOnClickListener { valorarLugar() }
         binding.btnEliminarValoracion.setOnClickListener { eliminarValoracion() } // Listener agregado aquí
-        binding.btnComoLLegar.setOnClickListener{
-            if(urlMapa.isNotEmpty()){
+        binding.btnComoLLegar.setOnClickListener {
+            if (urlMapa.isNotEmpty()) {
                 val intent = Intent(Intent.ACTION_VIEW, Uri.parse(urlMapa))
                 startActivity(intent)
-
-            }else{
+            } else {
                 Toast.makeText(this, "URL del mapa no disponible", Toast.LENGTH_SHORT).show()
-
             }
         }
     }
@@ -204,7 +202,10 @@ class DetalleLugar : AppCompatActivity() {
                 }
 
                 userComment?.let {
-                    comentarioList.add(0, it) // Agregar el comentario del usuario al inicio de la lista
+                    comentarioList.add(
+                        0,
+                        it
+                    ) // Agregar el comentario del usuario al inicio de la lista
                 }
 
                 binding.recyclerViewComentarios.adapter?.notifyDataSetChanged()

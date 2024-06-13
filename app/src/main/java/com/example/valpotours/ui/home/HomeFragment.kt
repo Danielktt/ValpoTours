@@ -69,22 +69,6 @@ class HomeFragment : Fragment() {
         return root
     }
 
-    private fun filterPlaces(query: String?) {
-        Log.d("HomeFragment", "Filtering places with query: $query")
-        val filteredList = if (!query.isNullOrEmpty()) {
-            lugaresArrayList.filter { lugar ->
-                val matchesNombre = lugar.nombre?.contains(query, ignoreCase = true) == true
-                val matchesCategoria = lugar.categoria?.contains(query, ignoreCase = true) == true
-                Log.d("HomeFragment", "Filtering ${lugar.nombre}, nombre matches: $matchesNombre, categoria matches: $matchesCategoria")
-                matchesNombre || matchesCategoria
-            }
-        } else {
-            originalLugaresArrayList
-        }
-        lugarTuristicoAdapter.updateList(ArrayList(filteredList))
-        Log.d("HomeFragment", "Filtered list size: ${filteredList.size}")
-    }
-
     private fun initRecycleView() {
         binding.rvCategories.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.rvCategories.setHasFixedSize(true)
@@ -102,6 +86,23 @@ class HomeFragment : Fragment() {
         binding.recycleLugares.adapter = lugarTuristicoAdapter
         listenForPlaceChanges()
     }
+
+    private fun filterPlaces(query: String?) {
+        Log.d("HomeFragment", "Filtering places with query: $query")
+        val filteredList = if (!query.isNullOrEmpty()) {
+            lugaresArrayList.filter { lugar ->
+                val matchesNombre = lugar.nombre?.contains(query, ignoreCase = true) == true
+                val matchesCategoria = lugar.categoria?.contains(query, ignoreCase = true) == true
+                Log.d("HomeFragment", "Filtering ${lugar.nombre}, nombre matches: $matchesNombre, categoria matches: $matchesCategoria")
+                matchesNombre || matchesCategoria
+            }
+        } else {
+            originalLugaresArrayList
+        }
+        lugarTuristicoAdapter.updateList(ArrayList(filteredList))
+        Log.d("HomeFragment", "Filtered list size: ${filteredList.size}")
+    }
+
 
     private fun filterPlacesByCategory(category: Categorias) {
         val filteredList: List<LugaresTuristico>

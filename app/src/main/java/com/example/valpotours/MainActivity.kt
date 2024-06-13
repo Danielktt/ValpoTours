@@ -1,6 +1,7 @@
 package com.example.valpotours
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -15,6 +16,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.example.valpotours.LoginActivity.Companion.userMail
 import com.example.valpotours.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -24,7 +26,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object{
         var listaFav:ArrayList<String> = arrayListOf()
-        lateinit var idUser: String
+        val idUser = userMail
         const val REQUEST_CODE_LOCATION = 0
 
     }
@@ -35,6 +37,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var db : FirebaseFirestore
     private lateinit var binding: ActivityMainBinding
 
+    @SuppressLint("ResourceAsColor")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -52,7 +55,9 @@ class MainActivity : AppCompatActivity() {
 
         val  bottonnav = findViewById<BottomNavigationView>(R.id.nav_view)
         bottonnav.setupWithNavController(navController)
-
+        if (bottonnav.isSelected == true){
+          //  bottonnav.tint (ContextCompat.getColor(this,R.color.celeste_letra))
+        }
     }
 
 
@@ -105,7 +110,7 @@ class MainActivity : AppCompatActivity() {
     private fun llenarListaFav() {
         db = FirebaseFirestore.getInstance()
         Log.i("PedroEsparrago","Hola")
-        db.collection("usuario").whereEqualTo("email", LoginActivity.userMail)
+        db.collection("usuario").whereEqualTo("email", idUser)
             .get()
             .addOnSuccessListener { documents ->
                 for (document in documents) {
@@ -114,7 +119,6 @@ class MainActivity : AppCompatActivity() {
                     } else {
                         listaFav = ArrayList()
                     }
-                    idUser = document.id
                 }
             }
             .addOnFailureListener { exception ->
