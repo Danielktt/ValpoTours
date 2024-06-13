@@ -10,7 +10,8 @@ import com.example.valpotours.MainActivity
 import com.example.valpotours.R
 import com.google.firebase.firestore.FirebaseFirestore
 
-class ComentarioAdapter(private val comentarioList: ArrayList<Comentario>) : RecyclerView.Adapter<ComentariosViewHolder>() {
+class ComentarioAdapter(private val comentarioList: ArrayList<Comentario>) :
+    RecyclerView.Adapter<ComentariosViewHolder>() {
     private val db = FirebaseFirestore.getInstance()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ComentariosViewHolder {
 
@@ -21,7 +22,8 @@ class ComentarioAdapter(private val comentarioList: ArrayList<Comentario>) : Rec
 
     override fun onBindViewHolder(holder: ComentariosViewHolder, position: Int) {
         val comentario = comentarioList[position]
-        val currentUser = MainActivity.idUser // Supongamos que esta es la variable que contiene el nombre de usuario actual
+        val currentUser =
+            MainActivity.idUser // Supongamos que esta es la variable que contiene el nombre de usuario actual
         val comentarioUser = comentario.nombreUsuario
         val isCurrentUserComment = currentUser == comentarioUser
         if (isCurrentUserComment) {
@@ -53,12 +55,12 @@ class ComentarioAdapter(private val comentarioList: ArrayList<Comentario>) : Rec
             }
 
     }
+
     fun eliminarComentario(position: Int) {
         val comentario = comentarioList[position]
         val db = FirebaseFirestore.getInstance()
         val nombreUsuario = comentario.nombreUsuario
         val idLugar = comentario.idLugar
-
         if (nombreUsuario != null && idLugar != null) {
             db.collection("comentarios")
                 .whereEqualTo("nombreUsuario", nombreUsuario)
@@ -68,7 +70,6 @@ class ComentarioAdapter(private val comentarioList: ArrayList<Comentario>) : Rec
                     for (document in documents) {
                         document.reference.delete()
                             .addOnSuccessListener {
-                                comentarioList.removeAt(position)
                                 notifyDataSetChanged()
                             }
                             .addOnFailureListener { e ->
@@ -90,7 +91,8 @@ class ComentarioAdapter(private val comentarioList: ArrayList<Comentario>) : Rec
     interface OnCommentDeleteListener {
         fun onDeleteComment(position: Int)
     }
-    private var    onDeleteListener: OnCommentDeleteListener? = null
+
+    private var onDeleteListener: OnCommentDeleteListener? = null
     fun setOnCommentDeleteListener(listener: OnCommentDeleteListener) {
         onDeleteListener = listener
     }
