@@ -77,7 +77,7 @@
             android:layout_gravity="center"
             android:backgroundTint="@color/blanco"
             android:inputType="textEmailAddress"
-            android:text="@string/version"
+            android:text="@string/change_data_perfile"
             android:textAllCaps="true"
             android:maxLines="1"
             android:singleLine="true"

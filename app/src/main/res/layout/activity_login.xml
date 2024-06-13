@@ -88,38 +88,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/etEmail" />
 
+    <!-- TextView para Siguiente -->
+
+
+
+    <!-- TextView para Signup -->
     <TextView
         android:id="@+id/tvForgotPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="20dp"
         android:minHeight="48dp"
         android:onClick="forgotPassword"
         android:paddingTop="10dp"
         android:text="@string/forgot_password"
         android:textColor="@color/celeste_letra"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.489"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/etPassword" />
 
-    <!-- TextView para Siguiente -->
-    <TextView
-        android:id="@+id/tvContinue"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:minHeight="48dp"
-        android:onClick="nextWithout"
-        android:paddingTop="10dp"
-        android:text="@string/next_without_account"
-        android:textColor="@color/celeste_letra"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvForgotPassword" />
-
-    <!-- Botón de Login -->
-
-    <!-- TextView para Signup -->
     <Button
         android:id="@+id/btnIngresar"
         android:layout_width="325dp"
@@ -130,7 +118,7 @@
         android:textColor="@color/blanco"
         android:textSize="23dp"
         android:onClick="login"
-        app:layout_constraintTop_toBottomOf="@id/tvContinue"
+        app:layout_constraintTop_toBottomOf="@id/tvForgotPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -160,6 +148,7 @@
         android:id="@+id/tvRegister2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
         android:layout_marginTop="8dp"
         android:minHeight="48dp"
         android:onClick="goRegister"

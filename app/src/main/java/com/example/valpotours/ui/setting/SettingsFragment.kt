@@ -7,7 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import com.example.valpotours.ChangeDatoActivity
 import com.example.valpotours.LoginActivity
+import com.example.valpotours.MainActivity
 import com.example.valpotours.databinding.FragmentSettingsBinding
 import com.google.firebase.auth.FirebaseAuth
 
@@ -43,6 +45,10 @@ class SettingsFragment : Fragment() {
         binding.btnLogOut.setOnClickListener {
             binding.progressBar.isVisible = true
             logOut()
+        }
+        binding.btnVersion.setOnClickListener{
+            val intent = Intent(context, ChangeDatoActivity::class.java)
+            startActivity(intent)
         }
         return binding.root
     }
