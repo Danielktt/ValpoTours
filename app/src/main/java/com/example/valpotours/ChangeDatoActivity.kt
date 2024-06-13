@@ -41,7 +41,6 @@ class ChangeDatoActivity : AppCompatActivity() {
         initListeners()
     }
 
-
     private fun initListeners() {
         btnChangeDatos.setOnClickListener {
             changeUserData()
@@ -69,72 +68,56 @@ class ChangeDatoActivity : AppCompatActivity() {
         val password = etPassword.text.toString()
         val password2 = etPassword2.text.toString()
 
-        if (fullName.isEmpty() || email.isEmpty() || password.isEmpty() || password2.isEmpty()) {
+        val user = mAuth.currentUser
+
+        if (fullName.isEmpty() && email.isEmpty() && password.isEmpty()) {
             Toast.makeText(this, R.string.please_complete_all_fields, Toast.LENGTH_SHORT).show()
             return
         }
 
-        if (password != password2) {
-            Toast.makeText(this, R.string.passwords_do_not_match, Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        val user = mAuth.currentUser
-
         user?.let {
-            val profileUpdates = UserProfileChangeRequest.Builder()
-                .setDisplayName(fullName)
-                .build()
+            if (fullName.isNotEmpty()) {
+                val profileUpdates = UserProfileChangeRequest.Builder()
+                    .setDisplayName(fullName)
+                    .build()
 
-            it.updateProfile(profileUpdates)
-                .addOnCompleteListener { profileTask ->
-                    if (profileTask.isSuccessful) {
-                        it.updateEmail(email)
-                            .addOnCompleteListener { emailTask ->
-                                if (emailTask.isSuccessful) {
-                                    it.updatePassword(password)
-                                        .addOnCompleteListener { passwordTask ->
-                                            if (passwordTask.isSuccessful) {
-                                                val database = Firebase.firestore
-                                                database.collection("usuario").document(email).set(hashMapOf(
-                                                    "nombre" to fullName,
-                                                    "email" to email,
-                                                    "constraseña" to password
-                                                )
-                                                )
-                                                binding.progressBar.isVisible = true
-                                                Toast.makeText(
-                                                    this,
-                                                    R.string.data_updated_successfully,
-                                                    Toast.LENGTH_SHORT
-                                                ).show()
-                                            } else {
-                                                Toast.makeText(
-                                                    this,
-                                                    R.string.Something_went_wrong_while_updating_password,
-                                                    Toast.LENGTH_SHORT
-                                                ).show()
-                                            }
-                                        }
-                                } else {
-                                    Toast.makeText(
-                                        this,
-                                        R.string.Something_went_wrong_while_updating_email,
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
-                            }
-                    } else {
-                        Toast.makeText(
-                            this,
-                            R.string.Something_went_wrong_while_updating_the_profile,
-                            Toast.LENGTH_SHORT
-                        ).show()
+                it.updateProfile(profileUpdates).addOnCompleteListener { profileTask ->
+                    if (!profileTask.isSuccessful) {
+                        Toast.makeText(this, R.string.Something_went_wrong_while_updating_the_profile, Toast.LENGTH_SHORT).show()
                     }
                 }
+            }
+
+            if (email.isNotEmpty()) {
+                it.updateEmail(email).addOnCompleteListener { emailTask ->
+                    if (!emailTask.isSuccessful) {
+                        Toast.makeText(this, R.string.Something_went_wrong_while_updating_email, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+
+            if (password.isNotEmpty()) {
+                if (password == password2) {
+                    it.updatePassword(password).addOnCompleteListener { passwordTask ->
+                        if (!passwordTask.isSuccessful) {
+                            Toast.makeText(this, R.string.Something_went_wrong_while_updating_password, Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                } else {
+                    Toast.makeText(this, R.string.passwords_do_not_match, Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            val database = Firebase.firestore
+            user.email?.let { it1 ->
+                database.collection("usuario").document(it1).set(hashMapOf(
+                    "nombre" to (fullName.ifEmpty { user.displayName }),
+                    "email" to (email.ifEmpty { user.email }),
+                    "contraseña" to (if (password.isNotEmpty() && password == password2) password else "no-change")
+                ))
+            }
+            binding.progressBar.isVisible = true
+            Toast.makeText(this, R.string.data_updated_successfully, Toast.LENGTH_SHORT).show()
         }
     }
-
-
-
 }
