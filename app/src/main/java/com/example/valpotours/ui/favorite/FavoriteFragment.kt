@@ -14,6 +14,7 @@ import com.example.valpotours.LugaresTuristico
 import com.example.valpotours.MainActivity.Companion.listaFav
 import com.example.valpotours.adapter.CategoriasAdapter
 import com.example.valpotours.adapter.LugarTuristicoAdapter
+import com.example.valpotours.api.recreate
 import com.example.valpotours.databinding.FragmentFavoriteBinding
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.EventListener
@@ -31,8 +32,6 @@ class FavoriteFragment : Fragment() {
     lateinit var categoriasArrayList: ArrayList<Categorias>
     lateinit var lugaresArrayList: ArrayList<LugaresTuristico>
     lateinit var originalLugaresArrayList: ArrayList<LugaresTuristico> // Mantén una copia de la lista original
-
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

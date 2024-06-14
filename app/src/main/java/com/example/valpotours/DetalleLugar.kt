@@ -44,7 +44,8 @@ class DetalleLugar : AppCompatActivity() {
         val id_place = intent.extras?.getString(ID_KEY).orEmpty()
         db = FirebaseFirestore.getInstance()
         initDetail(id_place)
-        binding.btnBack.setOnClickListener { onBackPressed() }
+        binding.btnBack.setOnClickListener { val intent= Intent(this,MainActivity::class.java)
+        startActivity(intent)}
         binding.btnFavorito.setOnClickListener { editarListaFavoritos(idLugar) }
         binding.btnPublicarComentario.setOnClickListener { publicarComentario() }
         binding.btnValorar.setOnClickListener { valorarLugar() }
@@ -103,6 +104,7 @@ class DetalleLugar : AppCompatActivity() {
             favoritoRef.update("favoritos", FieldValue.arrayRemove(idLugar))
             listaFav.remove(idLugar)
             binding.btnFavorito.setImageResource(R.drawable.ic_favorite_false)
+
         } else {
             favoritoRef.update("favoritos", FieldValue.arrayUnion(idLugar)).addOnSuccessListener {
                 listaFav.add(idLugar)
@@ -135,6 +137,7 @@ class DetalleLugar : AppCompatActivity() {
                     )
                     db.collection("comentarios").add(comentarioData)
                         .addOnSuccessListener {
+                            listenForCommentChanges()
                             Log.i("PedroEsparrago", "Comentario publicado exitosamente")
                             binding.etComentario.text.clear()
                             // Actualizar el contador de comentarios

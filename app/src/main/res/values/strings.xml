@@ -15,7 +15,9 @@
     <string name="Something_went_wrong_while_updating_the_profile">Algo ha salido mal al actualizar el perfil</string>
     <string name="enter_a_valid_email_and_a_password_of_at_least_6_characters">Ingrese un correo válido y una contraseña de al menos 6 caraceteres</string>
     <string name="data_updated_successfully">Perfil Actualizado correctamente</string>
-
+    <string name="verification_email_sent">Correo de verificación enviado</string>
+    
+    <!--cambiar datos-->
     <string name="titlePerfilChange">Editar Perfil</string>
     <string name="Something_went_wrong_while_updating_email">Error al actualizar el correo electrónico</string>
 

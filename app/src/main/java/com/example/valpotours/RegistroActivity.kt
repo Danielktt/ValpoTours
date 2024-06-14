@@ -111,6 +111,7 @@ class RegistroActivity : AppCompatActivity() {
                                     )
                                     )
                                     mAuth.currentUser?.sendEmailVerification()
+                                    Toast.makeText(this, R.string.verification_email_sent, Toast.LENGTH_SHORT).show()
                                     binding.progressBar.isVisible = true
                                     goLogin()
                                 } else {

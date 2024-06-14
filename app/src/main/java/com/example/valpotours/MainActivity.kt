@@ -16,6 +16,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.example.valpotours.LoginActivity.Companion.EMAIL_KEY
 import com.example.valpotours.LoginActivity.Companion.userMail
 import com.example.valpotours.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -26,16 +27,15 @@ class MainActivity : AppCompatActivity() {
 
     companion object{
         var listaFav:ArrayList<String> = arrayListOf()
-        val idUser = userMail
         const val REQUEST_CODE_LOCATION = 0
-
+        val idUser = userMail
     }
-
 
     private val LocationService : LocationService = LocationService()
     private lateinit var navController: NavController
     private lateinit var db : FirebaseFirestore
     private lateinit var binding: ActivityMainBinding
+    //idUser = intent.extras?.getString(EMAIL_KEY) ?: ""
 
     @SuppressLint("ResourceAsColor")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,6 +47,7 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
         enableMyLocation()
         llenarListaFav()
 
