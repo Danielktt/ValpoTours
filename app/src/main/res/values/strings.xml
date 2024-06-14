@@ -20,7 +20,7 @@
     <!--cambiar datos-->
     <string name="titlePerfilChange">Editar Perfil</string>
     <string name="Something_went_wrong_while_updating_email">Error al actualizar el correo electrónico</string>
-
+    <string name="current_password">Contraseña Actual</string>
     <string name="Something_went_wrong_while_updating_password">Error al actualizar la contraseña</string>
 
     <!-- Login-->
