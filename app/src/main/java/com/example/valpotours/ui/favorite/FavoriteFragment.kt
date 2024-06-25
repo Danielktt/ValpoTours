@@ -1,5 +1,6 @@
 package com.example.valpotours.ui.favorite
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -12,6 +13,7 @@ import com.example.valpotours.Categorias
 import com.example.valpotours.LoginActivity.Companion.userMail
 import com.example.valpotours.LugaresTuristico
 import com.example.valpotours.MainActivity.Companion.listaFav
+import com.example.valpotours.RecorridoActivity
 import com.example.valpotours.adapter.CategoriasAdapter
 import com.example.valpotours.adapter.LugarTuristicoAdapter
 import com.example.valpotours.api.recreate
@@ -29,7 +31,6 @@ class FavoriteFragment : Fragment() {
 
     lateinit var db : FirebaseFirestore
     lateinit var binding: FragmentFavoriteBinding
-    lateinit var categoriasArrayList: ArrayList<Categorias>
     lateinit var lugaresArrayList: ArrayList<LugaresTuristico>
     lateinit var originalLugaresArrayList: ArrayList<LugaresTuristico> // Mantén una copia de la lista original
 
@@ -42,14 +43,9 @@ class FavoriteFragment : Fragment() {
         // INIT PERFIL
         initPerfil()
 
-        // INIT CATEGORIAS
-        binding.rvCategories.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        binding.rvCategories.setHasFixedSize(true)
-        categoriasArrayList = arrayListOf()
-        binding.rvCategories.adapter = CategoriasAdapter(categoriasArrayList) { selectedCategory ->
-            filterPlacesByCategory(selectedCategory)
+        binding.btnRecorrido.setOnClickListener {
+            navigateToRecorrido()
         }
-        EventChangeListenerCategories()
 
         // INIT LUGARES
         binding.rvLugares.layoutManager = GridLayoutManager(requireContext(), 2)
@@ -62,36 +58,11 @@ class FavoriteFragment : Fragment() {
         return binding.root
     }
 
-    private fun filterPlacesByCategory(category: Categorias) {
-        val filteredList = if (category != null) {
-            lugaresArrayList.filter { lugar ->
-                category.categoria?.let { lugar.categoria?.contains(it, ignoreCase = true) } == true
-            }
-        } else {
-            originalLugaresArrayList // Restaura la lista original si la categoría está vacía
-        }
-        (binding.rvLugares.adapter as LugarTuristicoAdapter).updateList(ArrayList(filteredList))
-        Log.d("FavoriteFragment", "Filtered list size by category: ${filteredList.size}")
+    private fun navigateToRecorrido() {
+        val intent = Intent(context,RecorridoActivity::class.java)
+        startActivity(intent)
     }
 
-    private fun EventChangeListenerCategories() {
-        db = FirebaseFirestore.getInstance()
-        db.collection("categorias")
-            .addSnapshotListener(object : EventListener<QuerySnapshot> {
-                override fun onEvent(value: QuerySnapshot?, error: FirebaseFirestoreException?) {
-                    if (error != null) {
-                        Log.i("Firestore Error", error.message.toString())
-                        return
-                    }
-                    for (dc: DocumentChange in value?.documentChanges!!) {
-                        if (dc.type == DocumentChange.Type.ADDED) {
-                            categoriasArrayList.add(dc.document.toObject(Categorias::class.java))
-                        }
-                    }
-                    binding.rvCategories.adapter?.notifyDataSetChanged()
-                }
-            })
-    }
 
     private fun EvenChangeListenerPlaces() {
         db = FirebaseFirestore.getInstance()

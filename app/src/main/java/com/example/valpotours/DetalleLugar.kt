@@ -1,26 +1,36 @@
 package com.example.valpotours
 
+import android.Manifest
 import android.net.Uri
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.valpotours.LoginActivity.Companion.userMail
 import com.example.valpotours.MainActivity.Companion.idUser
 import com.example.valpotours.MainActivity.Companion.listaFav
+import com.example.valpotours.MainActivity.Companion.listaRecorrido
 import com.example.valpotours.adapter.ComentarioAdapter
 import com.example.valpotours.adapter.LugarTuristicoViewHolder.Companion.ID_KEY
 import com.example.valpotours.databinding.ActivityDetalleLugarBinding
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
+
 
 class DetalleLugar : AppCompatActivity() {
     private var urlMapa: String = ""
@@ -30,6 +40,8 @@ class DetalleLugar : AppCompatActivity() {
     private lateinit var comentarioList: ArrayList<Comentario>
     private lateinit var comentarioAdapter: ComentarioAdapter
     private var userHasRated = false
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,12 +53,16 @@ class DetalleLugar : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+
+
         val id_place = intent.extras?.getString(ID_KEY).orEmpty()
         db = FirebaseFirestore.getInstance()
         initDetail(id_place)
         binding.btnBack.setOnClickListener { val intent= Intent(this,MainActivity::class.java)
         startActivity(intent)}
         binding.btnFavorito.setOnClickListener { editarListaFavoritos(idLugar) }
+        binding.btnAddToTour.setOnClickListener { añadirARecorrido(id_place) }
         binding.btnPublicarComentario.setOnClickListener { publicarComentario() }
         binding.btnValorar.setOnClickListener { valorarLugar() }
         binding.btnEliminarValoracion.setOnClickListener { eliminarValoracion() } // Listener agregado aquí
@@ -56,6 +72,20 @@ class DetalleLugar : AppCompatActivity() {
                 startActivity(intent)
             } else {
                 Toast.makeText(this, "URL del mapa no disponible", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun añadirARecorrido(idLugar: String) {
+        db = FirebaseFirestore.getInstance()
+        val lugarRef = db.collection("usuario").document(idUser)
+        if (idLugar in listaRecorrido) {
+            Toast.makeText(this,R.string.place_in_list, Toast.LENGTH_SHORT).show()
+        } else {
+            lugarRef.update("recorrido", FieldValue.arrayUnion(idLugar)).addOnSuccessListener {
+                listaRecorrido.add(idLugar)
+            }.addOnFailureListener { e ->
+                Log.i("PedroEsparrago", "Error al agregar el valor al array", e)
             }
         }
     }
@@ -318,8 +348,4 @@ class DetalleLugar : AppCompatActivity() {
 
     }
 
-    private fun navigateToMap() {
-        val intent = Intent(this, MapActivity::class.java)
-        startActivity(intent)
-    }
 }

@@ -16,7 +16,7 @@
     <string name="enter_a_valid_email_and_a_password_of_at_least_6_characters">Ingrese un correo válido y una contraseña de al menos 6 caraceteres</string>
     <string name="data_updated_successfully">Perfil Actualizado correctamente</string>
     <string name="verification_email_sent">Correo de verificación enviado</string>
-    
+
     <!--cambiar datos-->
     <string name="titlePerfilChange">Editar Perfil</string>
     <string name="Something_went_wrong_while_updating_email">Error al actualizar el correo electrónico</string>
@@ -57,6 +57,7 @@
 
     <string name="how_to_get">Como llegar</string>
     <string name="add_to_tour">Agregar a recorrido</string>
+    <string name="place_in_list">Lugar ya esta agregado</string>
 
     <!-- Editar-->
     <string name="add_comment">Agregar comentario aqui</string>
@@ -70,4 +71,10 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    
+    <!--Recorrido-->
+    <string name="route">Recorrido</string>
+    <string name="start_route">Empezar recorrido</string>
+    <string name="delete">Eliminar</string>
+    
 </resources>

@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object{
         var listaFav:ArrayList<String> = arrayListOf()
+        var listaRecorrido:ArrayList<String> = arrayListOf()
         const val REQUEST_CODE_LOCATION = 0
         val idUser = userMail
     }
@@ -50,6 +51,7 @@ class MainActivity : AppCompatActivity() {
 
         enableMyLocation()
         llenarListaFav()
+        llenarListaRecorrido()
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
         navController = navHostFragment.navController
@@ -124,6 +126,25 @@ class MainActivity : AppCompatActivity() {
             }
             .addOnFailureListener { exception ->
                 Log.i("Error getting documents: ", exception.toString())
+            }
+    }
+
+    private fun llenarListaRecorrido() {
+        db = FirebaseFirestore.getInstance()
+        Log.i("PedroEsparrago","Llenando recorridos")
+        db.collection("usuario").whereEqualTo("email", idUser)
+            .get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    if (document.data.contains("recorrido")) {
+                        listaRecorrido = document.data.get("recorrido") as ArrayList<String>
+                    } else {
+                        listaRecorrido = ArrayList()
+                    }
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.i("PedroEsparrago", exception.toString())
             }
     }
 
